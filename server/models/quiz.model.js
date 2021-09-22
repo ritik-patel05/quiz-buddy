@@ -71,5 +71,5 @@ const quizSchema = Schema(
   { timestamps: true }
 );
 
-const Quiz = mongoose.Model("Quiz", quizSchema);
+const Quiz = mongoose.model("Quiz", quizSchema);
 module.exports = Quiz;
