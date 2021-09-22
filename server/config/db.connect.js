@@ -1,10 +1,10 @@
-require("dotenv").config();
 const mongoose = require("mongoose");
+const constants = require("./constant");
 
 const initializeDBConnection = () => {
   mongoose
     // eslint-disable-next-line no-undef
-    .connect(process.env.MONGO_URI, {
+    .connect(constants.db.MONGO_URI, {
       useUnifiedTopology: true,
       useNewUrlParser: true,
     })
