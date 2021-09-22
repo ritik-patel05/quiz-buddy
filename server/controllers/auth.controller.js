@@ -1,0 +1,138 @@
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const User = require("../models/user.model");
+const constant = require("../config/constant");
+
+const login = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email }).lean().exec();
+
+    if (!user) {
+      return res.status(404).send({
+        message: "User not found.",
+      });
+    }
+
+    const isPasswordRight = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordRight) {
+      return res.status(401).json({
+        accessToken: null,
+        message: "Invalid Password!",
+      });
+    }
+
+    const accessToken = jwt.sign({ id: user._id }, constant.jwt.JWT_SECRET, {
+      expiresIn: constant.jwt.JWT_EXPIRY,
+    });
+
+    const refreshToken = jwt.sign(
+      { id: user._id },
+      constant.jwt.JWT_REFRESH_SECRET,
+      { expiresIn: constant.jwt.JWT_REFRESH_EXPIRY },
+    );
+
+    // Set httpOnly cookie that stores our refresh token.
+    res.cookie("refresh-token", refreshToken, {
+      maxAge: 604800, // 7 days
+      httpOnly: true,
+    });
+
+    return res.status(200).json({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      accessToken,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error,
+    });
+  }
+};
+
+const signup = async (req, res) => {
+  const { email, password, name } = req.body;
+  try {
+    const userAlreadyExists = await User.findOne({ email }).lean().exec();
+    if (userAlreadyExists) {
+      return res.status(400).json({
+        message: "Fail! email is already in use.",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({
+      name,
+      email,
+      password: hashedPassword,
+    });
+
+    await user.save();
+
+    return res.status(201).json({
+      message: "Successfully created a new account.",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error,
+    });
+  }
+};
+
+const getNewRefreshToken = async (req, res) => {
+  const { refreshToken: requestToken } = req.body;
+  if (!requestToken) {
+    return res.status(403).json({
+      message: "Refresh Token is required.",
+    });
+  }
+
+  try {
+    // check if refresh token is not expired or tampered.
+    jwt.verify(
+      requestToken,
+      constant.jwt.JWT_REFRESH_SECRET,
+      (err, decodedToken) => {
+        if (err) {
+          return res.status(403).json({
+            message:
+              "Refresh token was expired. Please make new sign in request.",
+          });
+        }
+
+        const newRefreshToken = jwt.sign(
+          { id: decodedToken.id },
+          constant.jwt.JWT_REFRESH_SECRET,
+          { expiresIn: constant.jwt.JWT_REFRESH_EXPIRY }
+        );
+
+        const accessToken = jwt.sign(
+          { id: decodedToken.id },
+          constant.jwt.JWT_SECRET,
+          { expiresIn: constant.jwt.JWT_EXPIRY }
+        );
+
+        // Set httpOnly cookie that stores our refresh token.
+        res.cookie("refresh-token", newRefreshToken, {
+          maxAge: 604800, // 7 days
+          httpOnly: true,
+        });
+
+        // Send new access token back to client.
+        return res.status(200).json({
+          accessToken,
+          id: decodedToken.id,
+        });
+      }
+    );
+  } catch (error) {
+    res.status(500).json({
+      message: error,
+    });
+  }
+};
+
+module.exports = { login, signup, getNewRefreshToken };
