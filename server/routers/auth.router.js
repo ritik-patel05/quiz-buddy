@@ -9,6 +9,6 @@ const router = express.Router();
 
 router.route("/login").post(login);
 router.route("/signup").post(signup);
-router.route("/refresh_token").post(getNewRefreshToken);
+router.route("/refresh_token").get(getNewRefreshToken);
 
 module.exports = router;

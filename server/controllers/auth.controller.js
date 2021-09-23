@@ -31,7 +31,7 @@ const login = async (req, res) => {
     const refreshToken = jwt.sign(
       { id: user._id },
       constant.jwt.JWT_REFRESH_SECRET,
-      { expiresIn: constant.jwt.JWT_REFRESH_EXPIRY },
+      { expiresIn: constant.jwt.JWT_REFRESH_EXPIRY }
     );
 
     // Set httpOnly cookie that stores our refresh token.
@@ -83,7 +83,10 @@ const signup = async (req, res) => {
 };
 
 const getNewRefreshToken = async (req, res) => {
-  const { refreshToken: requestToken } = req.body;
+  // read refresh token from httpOnly cookie.
+  const requestToken = req.cookies["refresh-token"];
+
+  // check if the refreshtoken was set in cookies.
   if (!requestToken) {
     return res.status(403).json({
       message: "Refresh Token is required.",
