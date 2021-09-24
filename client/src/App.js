@@ -21,8 +21,10 @@ function App() {
   // This will call logout in all of the tabs.
   useEffect(() => {
     const syncLogout = (event) => {
-      console.log('Logged out from storage :)');
-      dispatch(logout());
+      if (event.key === 'logout') {
+        console.log('Logged out from storage :)');
+        dispatch(logout());
+      }
     };
 
     const doUpdates = async () => {
