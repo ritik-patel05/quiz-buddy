@@ -11,6 +11,7 @@ import {
   clearState,
 } from './redux/authSlice';
 import { Home, Login, Signup } from './pages/index';
+import { Header } from './components/index';
 
 axios.defaults.withCredentials = true;
 
@@ -54,6 +55,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <Header />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />

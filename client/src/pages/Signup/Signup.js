@@ -113,9 +113,9 @@ export const Signup = () => {
                 </Formik>
 
                 <div className="text-gray-600 text-center mt-6">
-                  Already using QuizX?{' '}
+                  Already using Quiz-Buddy?{' '}
                   <Link
-                    to="/signin"
+                    to="/login"
                     className="text-blue-600 hover:underline transition duration-150 ease-in-out"
                   >
                     Sign In
