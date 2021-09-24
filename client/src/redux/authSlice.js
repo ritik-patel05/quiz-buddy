@@ -3,8 +3,6 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { constants } from '../util/constant';
 
-axios.defaults.withCredentials = true;
-
 export const loginUser = createAsyncThunk(
   'users/loginUser',
   async ({ email, password }, thunkAPI) => {
@@ -44,10 +42,7 @@ export const signupUser = createAsyncThunk(
         }
       );
       console.log('Response after signup.', response);
-      if (response.status === 201) {
-        const navigate = useNavigate();
-        navigate('/login');
-      } else {
+      if (response.status !== 201) {
         return thunkAPI.rejectWithValue(response.data);
       }
     } catch (error) {
@@ -68,7 +63,9 @@ export const getNewAccessToken = createAsyncThunk(
       if (response.status === 200) {
         const { accessToken } = response.data;
         localStorage.setItem('access-token', accessToken);
-        return thunkAPI.fulfillWithValue("Successfully created new access token.");
+        return thunkAPI.fulfillWithValue(
+          'Successfully created new access token.'
+        );
       } else {
         return thunkAPI.rejectWithValue(response.data);
       }
@@ -77,7 +74,7 @@ export const getNewAccessToken = createAsyncThunk(
       if (error.response.status === 403) {
         const navigate = useNavigate();
         navigate('/login');
-        return thunkAPI.rejectWithValue("Not Authorized.");
+        return thunkAPI.rejectWithValue('Not Authorized.');
       }
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -90,68 +87,62 @@ export const authSlice = createSlice({
     name: '',
     email: '',
     id: '',
-    isFetching: false,
-    isSuccess: false,
-    isError: false,
-    errorMessage: '',
+    status: 'idle',
+    error: null,
   },
   reducers: {
-    logout: (_) => {
+    logout: (state) => {
+      state.name = '';
+      state.email = '';
+      state.id = '';
+      state.status = 'idle';
+      state.error = null;
       localStorage.removeItem('access-token');
       // to support logging out from all windows
       localStorage.setItem('logout', Date.now());
     },
     clearState: (state) => {
-      state.isError = false;
-      state.isSuccess = false;
-      state.isFetching = false;
-
+      state.status = 'idle';
+      state.error = null;
       return state;
     },
   },
   extraReducers: {
     [loginUser.fulfilled]: (state, { payload }) => {
       state.email = payload.email;
-      state.user = payload.name;
+      state.name = payload.name;
       state.id = payload.id;
-      state.isFetching = false;
-      state.isSuccess = true;
-      return state;
+      state.status = 'succeeded';
     },
     [loginUser.rejected]: (state, { payload }) => {
       console.log('payload', payload);
-      state.isFetching = false;
-      state.isError = true;
-      state.errorMessage = payload.message;
+      state.status = 'failed';
+      state.error = payload.message;
     },
     [loginUser.pending]: (state) => {
-      state.isFetching = true;
+      state.status = 'loading';
     },
     [signupUser.fulfilled]: (state, { payload }) => {
-      state.isSuccess = true;
-      return state;
+      state.status = 'succeeded';
     },
     [signupUser.rejected]: (state, { payload }) => {
       console.log('payload', payload);
-      state.isFetching = false;
-      state.isError = true;
-      state.errorMessage = payload.message;
+      state.status = 'failed';
+      state.error = payload.message;
     },
     [signupUser.pending]: (state) => {
-      state.isFetching = true;
+      state.status = 'loading';
     },
     [getNewAccessToken.fulfilled]: (state, { payload }) => {
-      state.isSuccess = true;
-      return state;
+      state.status = 'succeeded';
     },
     [getNewAccessToken.rejected]: (state, { payload }) => {
       console.log('payload', payload);
-      state.isFetching = false;
-      state.isError = true;
-      state.errorMessage = payload.message;
+      state.status = 'failed';
+      state.error = payload.message;
     },
     [getNewAccessToken.pending]: (state) => {
-      state.isFetching = true;
+      state.status = 'loading';
     },
   },
 });
