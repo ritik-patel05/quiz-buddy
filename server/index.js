@@ -7,6 +7,8 @@ const initializeDBConnection = require("./config/db.connect");
 const errorHandlerRoute = require("./middlewares/errorHandler");
 const notFoundHandlerRoute = require("./middlewares/routeHandler");
 const authRouter = require("./routers/auth.router");
+const quizRouter = require("./routers/quiz.router");
+const questionRouter = require("./routers/question.router");
 const constants = require("./config/constant");
 
 const app = express();
@@ -28,6 +30,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRouter);
+app.use("/api/quiz", quizRouter);
+app.use("/api/question", questionRouter);
 
 // Not found route Middleware
 app.use(notFoundHandlerRoute);

@@ -50,6 +50,12 @@ const userSchema = new Schema(
         },
       },
     ],
+    quizzesCreated: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Quiz",
+      },
+    ],
   },
   // eslint-disable-next-line comma-dangle
   { timestamps: true }

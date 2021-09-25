@@ -22,9 +22,10 @@ const quizSchema = Schema(
     createdBy: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: "User",
+      required: [true, "User who created this quiz is required."],
     },
     quizCode: {
-      type: String,
+      type: Number,
       minlength: 4,
       maxlength: 4,
       required() {
@@ -33,14 +34,17 @@ const quizSchema = Schema(
     },
     isPrivate: {
       type: Boolean,
+      required: [true, "isPrivate field is required."],
     },
     scoreForCorrectResponse: {
       type: Number,
       default: 2,
+      required: [true, "Score for correct response is required."],
     },
     scoreForIncorrectResponse: {
       type: Number,
       default: 0,
+      required: [true, "Score for correct response is required."],
     },
     usersParticipated: [
       {

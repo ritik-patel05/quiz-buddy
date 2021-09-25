@@ -7,6 +7,7 @@ const topicSchema = Schema(
     topic: {
       type: String,
       required: [true, "Topic name is required."],
+      unique: [true, "Topic name already exists."],
     },
     quizzes: [
       {
