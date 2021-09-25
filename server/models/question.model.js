@@ -8,10 +8,12 @@ const questionSchema = Schema(
       type: String,
       required: [true, "Question body is required."],
     },
-    options: {
-      type: mongoose.SchemaTypes.ObjectId,
-      ref: "Option",
-    },
+    options: [
+      {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: "Option",
+      },
+    ],
     correctOption: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: "Option",
