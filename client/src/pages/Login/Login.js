@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import toast, { Toaster } from 'react-hot-toast';
+import styled from '@emotion/styled';
+
 import { clearState, loginUser } from '../../redux/authSlice';
 
 export const Login = () => {
@@ -95,7 +97,7 @@ export const Login = () => {
                             className="btn text-white bg-blue-600 hover:bg-blue-700 w-full"
                             disabled={isSubmitting}
                           >
-                            Sign in
+                            {isSubmitting ? 'Submitting...' : 'Sign in'}
                           </button>
                         </div>
                       </div>
@@ -141,9 +143,18 @@ const MyTextInput = ({ label, ...props }) => {
           {...props}
         />
         {meta.touched && meta.error ? (
-          <div className="error">{meta.error}</div>
+          <StyledErrorMessage className="mt-1 text-xs">
+            {meta.error}
+          </StyledErrorMessage>
         ) : null}
       </div>
     </div>
   );
 };
+
+const StyledErrorMessage = styled.div`
+  &:before {
+    content: '❌ ';
+    font-size: 10px;
+  }
+`;

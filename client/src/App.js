@@ -1,22 +1,26 @@
 import './App.css';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import axios from 'axios';
-import {
-  logout,
-  loginUser,
-  signupUser,
-  getNewAccessToken,
-  clearState,
-} from './redux/authSlice';
-import { Home, Login, Signup } from './pages/index';
+import { logout, getNewAccessToken, clearState } from './redux/authSlice';
+import { Home, Login, Signup, Dashboard } from './pages/index';
 import { Header } from './components/index';
 
 axios.defaults.withCredentials = true;
 
 function App() {
   const dispatch = useDispatch();
+
+  // check if user is logged in(if the cookie is still not expired.)
+  useEffect(() => {
+    const handleLogin = async () => {
+      await dispatch(getNewAccessToken());
+    };
+
+    handleLogin();
+    dispatch(clearState());
+  }, [dispatch]);
 
   // Add event listener that gets triggered when logout is called in one of the tabs.
   // This will call logout in all of the tabs.
@@ -28,40 +32,20 @@ function App() {
       }
     };
 
-    const doUpdates = async () => {
-      dispatch(clearState());
-      await dispatch(
-        signupUser({
-          email: 'ritik5@gmail.com',
-          password: '123456',
-          name: 'Ritik Patel',
-        })
-      );
-
-      dispatch(clearState());
-      await dispatch(
-        loginUser({ email: 'ritik5@gmail.com', password: '123456' })
-      );
-
-      dispatch(clearState());
-      await dispatch(getNewAccessToken());
-    };
-
-    // doUpdates();
-
     window.addEventListener('storage', syncLogout);
     return () => window.removeEventListener('storage', syncLogout);
   }, [dispatch]);
 
   return (
-    <BrowserRouter>
+    <div className="flex flex-col">
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
-    </BrowserRouter>
+    </div>
   );
 }
 

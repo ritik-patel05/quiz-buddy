@@ -7,6 +7,7 @@ import { logout } from '../redux/authSlice';
 
 export const Header = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [top, setTop] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -24,6 +25,7 @@ export const Header = () => {
 
   const logoutHandler = (e) => {
     dispatch(logout());
+    navigate('/login');
   };
 
   return (

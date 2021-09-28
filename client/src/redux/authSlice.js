@@ -63,18 +63,14 @@ export const getNewAccessToken = createAsyncThunk(
       if (response.status === 200) {
         const { accessToken } = response.data;
         localStorage.setItem('access-token', accessToken);
-        return thunkAPI.fulfillWithValue(
-          'Successfully created new access token.'
-        );
+        return response.data;
       } else {
         return thunkAPI.rejectWithValue(response.data);
       }
     } catch (error) {
       console.log('Error during getNewAccessToken: ', error.response.data);
       if (error.response.status === 403) {
-        const navigate = useNavigate();
-        navigate('/login');
-        return thunkAPI.rejectWithValue('Not Authorized.');
+        return thunkAPI.rejectWithValue(error.response.data);
       }
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -135,6 +131,10 @@ export const authSlice = createSlice({
     },
     [getNewAccessToken.fulfilled]: (state, { payload }) => {
       state.status = 'succeeded';
+      state.email = payload.email;
+      state.name = payload.name;
+      state.id = payload.id;
+      console.log("finished getNewAccessToken");
     },
     [getNewAccessToken.rejected]: (state, { payload }) => {
       console.log('payload', payload);
