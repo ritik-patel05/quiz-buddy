@@ -10,6 +10,7 @@ const authRouter = require("./routers/auth.router");
 const quizRouter = require("./routers/quiz.router");
 const questionRouter = require("./routers/question.router");
 const constants = require("./config/constant");
+const checkAuth = require("./middlewares/checkAuth");
 
 const app = express();
 
@@ -30,8 +31,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRouter);
-app.use("/api/quiz", quizRouter);
-app.use("/api/question", questionRouter);
+app.use("/api/quiz", checkAuth, quizRouter);
+app.use("/api/question", checkAuth, questionRouter);
 
 // Not found route Middleware
 app.use(notFoundHandlerRoute);

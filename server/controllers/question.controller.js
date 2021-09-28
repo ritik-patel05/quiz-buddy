@@ -45,12 +45,12 @@ const createQuestion = async (req, res) => {
 
     // create question
     console.log("After iterating, correctOption is: ", correctOption);
-    const question = new Question({
+    let question = new Question({
       questionBody,
       correctOption,
       options: optionsIds,
     });
-    await question.save();
+    question = await question.save();
 
     // add this question to quiz.
     await Quiz.findOneAndUpdate(

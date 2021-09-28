@@ -1,3 +1,4 @@
+const { response } = require("express");
 const Quiz = require("../models/quiz.model");
 const User = require("../models/user.model");
 const Option = require("../models/option.model");
@@ -9,14 +10,20 @@ const Topic = require("../models/topic.model");
 const createQuiz = async (req, res) => {
   try {
     const {
+      title,
       topic,
       time,
-      createdBy,
       scoreForCorrectResponse,
       scoreForIncorrectResponse,
       isPrivate,
     } = req.body;
 
+    // // for testing errors
+    // return res.status(401).json({
+    //   message: "failed",
+    // });
+
+    const createdBy = req.user.userId;
     // Create new topic if it doesn't exist.
     const isTopicExists = await Topic.findOne({ topic }).exec();
     let currTopic = isTopicExists;
@@ -28,10 +35,11 @@ const createQuiz = async (req, res) => {
 
     // Add quizCode if isPrivate is true.
     let quiz;
-    if (isPrivate) {
+    if (isPrivate === true) {
       const quizCode = Math.floor(1000 + Math.random() * 9000);
       quiz = new Quiz({
         topic: currTopic._id,
+        title,
         time,
         createdBy,
         scoreForCorrectResponse,
@@ -42,6 +50,7 @@ const createQuiz = async (req, res) => {
     } else {
       quiz = new Quiz({
         topic: currTopic._id,
+        title,
         time,
         createdBy,
         scoreForCorrectResponse,
@@ -52,7 +61,7 @@ const createQuiz = async (req, res) => {
     const savedQuiz = await quiz.save();
 
     currTopic.quizzes.push(savedQuiz);
-    await currTopic.save();
+    currTopic = await currTopic.save();
 
     await User.updateOne(
       { _id: createdBy },
@@ -71,4 +80,22 @@ const createQuiz = async (req, res) => {
   }
 };
 
-module.exports = { createQuiz };
+const getAllQuizDetails = async (req, res) => {
+  const { userId } = req.user;
+
+  const user = await User.findById(userId)
+    .select("quizzesCreated")
+    .populate({
+      path: "quizzesCreated",
+      model: "Quiz",
+      select: "title topic time",
+      populate: { path: "topic", model: "Topic", select: "topic" },
+    })
+    .exec();
+
+  return res.status(200).json({
+    quizzes: user.quizzesCreated,
+  });
+};
+
+module.exports = { createQuiz, getAllQuizDetails };

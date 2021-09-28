@@ -11,7 +11,7 @@ const topicSchema = Schema(
     },
     quizzes: [
       {
-        type: mongoose.SchemaTypes.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Quiz",
       },
     ],

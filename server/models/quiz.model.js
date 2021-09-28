@@ -4,14 +4,18 @@ const { Schema } = mongoose;
 
 const quizSchema = Schema(
   {
+    title: {
+      type: String,
+      required: [true, "Title of quiz is required."],
+    },
     topic: {
-      type: mongoose.SchemaTypes.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Topic",
       required: [true, "Topic of quiz is required."],
     },
     questions: [
       {
-        type: mongoose.SchemaTypes.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Question",
       },
     ],
@@ -20,7 +24,7 @@ const quizSchema = Schema(
       required: [true, "Time of quiz is required."],
     },
     createdBy: {
-      type: mongoose.SchemaTypes.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
       required: [true, "User who created this quiz is required."],
     },
@@ -49,7 +53,7 @@ const quizSchema = Schema(
     usersParticipated: [
       {
         user: {
-          type: mongoose.SchemaTypes.ObjectId,
+          type: Schema.Types.ObjectId,
           ref: "User",
         },
         score: {

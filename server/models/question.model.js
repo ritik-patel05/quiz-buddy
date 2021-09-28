@@ -10,12 +10,12 @@ const questionSchema = Schema(
     },
     options: [
       {
-        type: mongoose.SchemaTypes.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Option",
       },
     ],
     correctOption: {
-      type: mongoose.SchemaTypes.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Option",
     },
   },

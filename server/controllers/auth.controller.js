@@ -24,19 +24,27 @@ const login = async (req, res) => {
       });
     }
 
-    const accessToken = jwt.sign({ id: user._id }, constant.jwt.JWT_SECRET, {
-      expiresIn: constant.jwt.JWT_EXPIRY,
-    });
+    const accessToken = jwt.sign(
+      { id: user._id, name: user.name, email: user.email },
+      constant.jwt.JWT_SECRET,
+      {
+        expiresIn: Number(constant.jwt.JWT_EXPIRY),
+      }
+    );
+
+    // console.log("In login verify token");
+    // const decodedToken = jwt.verify(accessToken, constant.jwt.JWT_SECRET);
+    // console.log("After");
 
     const refreshToken = jwt.sign(
-      { id: user._id },
+      { id: user._id, name: user.name, email: user.email },
       constant.jwt.JWT_REFRESH_SECRET,
-      { expiresIn: constant.jwt.JWT_REFRESH_EXPIRY }
+      { expiresIn: Number(constant.jwt.JWT_REFRESH_EXPIRY) }
     );
 
     // Set httpOnly cookie that stores our refresh token.
     res.cookie("refresh-token", refreshToken, {
-      maxAge: 604800, // 7 days
+      maxAge: 604800000, // 7 days (milliseconds)
       httpOnly: true,
     });
 
@@ -106,28 +114,22 @@ const getNewRefreshToken = async (req, res) => {
           });
         }
 
-        const newRefreshToken = jwt.sign(
-          { id: decodedToken.id },
-          constant.jwt.JWT_REFRESH_SECRET,
-          { expiresIn: constant.jwt.JWT_REFRESH_EXPIRY }
-        );
-
         const accessToken = jwt.sign(
-          { id: decodedToken.id },
+          {
+            id: decodedToken.id,
+            name: decodedToken.name,
+            email: decodedToken.email,
+          },
           constant.jwt.JWT_SECRET,
-          { expiresIn: constant.jwt.JWT_EXPIRY }
+          { expiresIn: Number(constant.jwt.JWT_EXPIRY) }
         );
-
-        // Set httpOnly cookie that stores our refresh token.
-        res.cookie("refresh-token", newRefreshToken, {
-          maxAge: 604800, // 7 days
-          httpOnly: true,
-        });
 
         // Send new access token back to client.
         return res.status(200).json({
           accessToken,
           id: decodedToken.id,
+          name: decodedToken.name,
+          email: decodedToken.email,
         });
       }
     );
