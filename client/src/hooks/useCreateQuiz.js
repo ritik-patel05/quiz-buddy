@@ -24,14 +24,15 @@ export default function useCreateQuiz() {
         // Optimistically update to new value
         queryClient.setQueryData('createdQuizzes', old => {
           console.log(old);
-          old.quizzes = [...old.quizzes, newQuiz];
+          if (!old) old = {};
+          old.quizzes = ( old?.quizzes ? [...old.quizzes, newQuiz] : [newQuiz] );
           return old;
         });
 
-        return { previousQuizzes };
+        return (previousQuizzes ? { previousQuizzes } : {});
       },
       onError: (err, newQuiz, context) => {
-        queryClient.setQueryData('createdQuizzes', context.previousQuizzes);
+        queryClient.setQueryData('createdQuizzes', (context?.previousQuizzes ? context?.previousQuizzes : []));
         console.log(err);
         return Promise.reject(err.message);
       },

@@ -9,8 +9,6 @@ import styled from '@emotion/styled';
 import { clearState, loginUser } from '../../redux/authSlice';
 
 export const Login = () => {
-  const status = useSelector((state) => state.auth.status);
-  const error = useSelector((state) => state.auth.error);
   const name = useSelector((state) => state.auth.name);
 
   const navigate = useNavigate();
@@ -23,17 +21,6 @@ export const Login = () => {
     }
     return () => dispatch(clearState()); // clean up function.
   }, [dispatch, name, navigate]);
-
-  useEffect(() => {
-    if (status === 'failed') {
-      toast.error(error);
-      dispatch(clearState());
-    }
-
-    if (status === 'succeeded') {
-      navigate('/');
-    }
-  }, [status, navigate, error, dispatch]);
 
   return (
     <div className="flex flex-col min-h-screen overflow-hidden">
@@ -61,16 +48,15 @@ export const Login = () => {
                       .min(4, 'Must be 4 characters or more.')
                       .required('Required'),
                   })}
-                  onSubmit={(values, { setSubmitting }) => {
-                    if (status === 'idle') {
-                      const login = async () => {
-                        console.log('Login user func called!');
-                        await dispatch(loginUser(values));
-                        console.log('Login finished.');
-                      };
-
-                      login();
-                      setSubmitting(false);
+                  onSubmit={async (values) => {
+                    try {
+                      const res = await dispatch(loginUser(values)).unwrap();
+                      // if signup succeeded.
+                      navigate('/dashboard');
+                    } catch (err) {
+                      // if signup failed.
+                      toast.error(err?.message ? err.message : err);
+                      dispatch(clearState());
                     }
                   }}
                 >

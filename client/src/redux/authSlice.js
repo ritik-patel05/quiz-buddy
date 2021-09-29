@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import { constants } from '../util/constant';
 
 export const loginUser = createAsyncThunk(
@@ -20,11 +19,11 @@ export const loginUser = createAsyncThunk(
         localStorage.setItem('access-token', accessToken);
         return response.data;
       } else {
-        return thunkAPI.rejectWithValue(response.data);
+        return thunkAPI.rejectWithValue(response?.data ? response.data : "Server error" );
       }
     } catch (error) {
-      console.log('Error during login: ', error.response.data);
-      return thunkAPI.rejectWithValue(error.response.data);
+      console.log('Error during login: ', error?.response?.data);
+      return thunkAPI.rejectWithValue(error.response?.data ? error.response?.data : "Server error" );
     }
   }
 );
@@ -43,11 +42,11 @@ export const signupUser = createAsyncThunk(
       );
       console.log('Response after signup.', response);
       if (response.status !== 201) {
-        return thunkAPI.rejectWithValue(response.data);
+        return thunkAPI.rejectWithValue(response?.data ? response.data : "Server error" );
       }
     } catch (error) {
-      console.log('Error during signup: ', error.response.data);
-      return thunkAPI.rejectWithValue(error.response.data);
+      console.log('Error during signup: ', error?.response?.data);
+      return thunkAPI.rejectWithValue(error?.response?.data ? error?.response?.data : "Server error" );
     }
   }
 );
@@ -65,14 +64,14 @@ export const getNewAccessToken = createAsyncThunk(
         localStorage.setItem('access-token', accessToken);
         return response.data;
       } else {
-        return thunkAPI.rejectWithValue(response.data);
+        return thunkAPI.rejectWithValue(response?.data ? response.data : "Server error" );
       }
     } catch (error) {
       console.log('Error during getNewAccessToken: ', error.response.data);
       if (error.response.status === 403) {
         return thunkAPI.rejectWithValue(error.response.data);
       }
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(error.response?.data ? error.response?.data : "Server error" );
     }
   }
 );
@@ -122,7 +121,6 @@ export const authSlice = createSlice({
       state.status = 'succeeded';
     },
     [signupUser.rejected]: (state, { payload }) => {
-      console.log('payload', payload);
       state.status = 'failed';
       state.error = ( payload?.message? payload.message : "Server error." ) ;
     },

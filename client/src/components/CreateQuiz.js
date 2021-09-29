@@ -1,7 +1,4 @@
 import { Formik, Form, useField } from 'formik';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import toast, { Toaster } from 'react-hot-toast';
 import styled from '@emotion/styled';
@@ -10,7 +7,7 @@ import useCreateQuiz from '../hooks/useCreateQuiz';
 // import { clearState, loginUser } from '../../redux/authSlice';
 
 export const CreateQuiz = () => {
-  const { status: createQuizStatus, mutateAsync: createQuiz } = useCreateQuiz();
+  const { mutateAsync: createQuiz } = useCreateQuiz();
 
   return (
     <div className="flex flex-col min-h-screen overflow-hidden">
@@ -45,21 +42,18 @@ export const CreateQuiz = () => {
                       .oneOf(['private', 'public'], 'Invalid Quiz Visibility')
                       .required('Required'),
                   })}
-                  onSubmit={async (values, { setSubmitting }) => {
-                      values.time = String(values.time);
-                      if (values.isPrivate === "private") values.isPrivate = true;
-                      else values.isPrivate = false;
+                  onSubmit={async (values) => {
+                    values.time = String(values.time);
 
-                      try {
-                        console.log("start submission for create new quiz.");
-                        await createQuiz(values);
-                        toast.success("Successfully created new quiz!");
-                      } catch (error) {
-                        toast.error(error);
-                      } finally {
-                        console.log('done')
-                      }
+                    if (values.isPrivate === 'private') values.isPrivate = true;
+                    else values.isPrivate = false;
 
+                    try {
+                      await createQuiz(values);
+                      toast.success('Successfully created new quiz!');
+                    } catch (error) {
+                      toast.error(error);
+                    }
                   }}
                 >
                   {({ isSubmitting }) => (
@@ -112,7 +106,7 @@ export const CreateQuiz = () => {
                             className="btn text-white bg-blue-600 hover:bg-blue-700 w-full"
                             disabled={isSubmitting}
                           >
-                            {isSubmitting ? "Submitting..." : "Create Quiz"}
+                            {isSubmitting ? 'Submitting...' : 'Create Quiz'}
                           </button>
                         </div>
                       </div>

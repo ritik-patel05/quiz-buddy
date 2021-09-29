@@ -9,8 +9,6 @@ import styled from '@emotion/styled';
 import { clearState, signupUser } from '../../redux/authSlice';
 
 export const Signup = () => {
-  const status = useSelector((state) => state.auth.status);
-  const error = useSelector((state) => state.auth.error);
   const name = useSelector((state) => state.auth.name);
 
   const navigate = useNavigate();
@@ -19,21 +17,10 @@ export const Signup = () => {
   useEffect(() => {
     dispatch(clearState());
     if (name) {
-      navigate('/login');
+      navigate('/dashboard');
     }
     return () => dispatch(clearState()); // clean up function.
   }, [dispatch, name, navigate]);
-
-  useEffect(() => {
-    if (status === 'failed') {
-      toast.error(error);
-      dispatch(clearState());
-    }
-
-    if (status === 'succeeded') {
-      navigate('/login');
-    }
-  }, [status, navigate, error, dispatch]);
 
   return (
     <div className="flex flex-col min-h-screen overflow-hidden">
@@ -63,16 +50,15 @@ export const Signup = () => {
                       .min(4, 'Must be 4 characters or more.')
                       .required('Required'),
                   })}
-                  onSubmit={(values, { setSubmitting }) => {
-                    if (status === 'idle') {
-                      const registerUser = async () => {
-                        console.log('Singup user func called!');
-                        await dispatch(signupUser(values));
-                        console.log('Singup finished.');
-                      };
-
-                      registerUser();
-                      setSubmitting(false);
+                  onSubmit={async (values) => {
+                    try {
+                      const res = await dispatch(signupUser(values)).unwrap();
+                      // if signup succeeded.
+                      navigate('/login');
+                    } catch (err) {
+                      // if signup failed.
+                      toast.error(err?.message ? err.message : err);
+                      dispatch(clearState());
                     }
                   }}
                 >
@@ -106,7 +92,7 @@ export const Signup = () => {
                             className="btn text-white bg-blue-600 hover:bg-blue-700 w-full"
                             disabled={isSubmitting}
                           >
-                            Sign Up
+                            {isSubmitting ? 'Submitting...' : 'Sign up'}
                           </button>
                         </div>
                       </div>
