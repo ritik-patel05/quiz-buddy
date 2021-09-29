@@ -113,7 +113,7 @@ export const authSlice = createSlice({
     [loginUser.rejected]: (state, { payload }) => {
       console.log('payload', payload);
       state.status = 'failed';
-      state.error = payload.message;
+      state.error = ( payload?.message? payload.message : "Server error." ) ;
     },
     [loginUser.pending]: (state) => {
       state.status = 'loading';
@@ -124,7 +124,7 @@ export const authSlice = createSlice({
     [signupUser.rejected]: (state, { payload }) => {
       console.log('payload', payload);
       state.status = 'failed';
-      state.error = payload.message;
+      state.error = ( payload?.message? payload.message : "Server error." ) ;
     },
     [signupUser.pending]: (state) => {
       state.status = 'loading';
@@ -139,7 +139,7 @@ export const authSlice = createSlice({
     [getNewAccessToken.rejected]: (state, { payload }) => {
       console.log('payload', payload);
       state.status = 'failed';
-      state.error = payload.message;
+      state.error = ( payload?.message ? payload.message : "Server error." ) ;
     },
     [getNewAccessToken.pending]: (state) => {
       state.status = 'loading';
