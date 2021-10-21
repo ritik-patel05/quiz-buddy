@@ -7,6 +7,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import styled from '@emotion/styled';
 
 import { clearState, loginUser } from '../../redux/authSlice';
+import { Header } from '../../components';
 
 export const Login = () => {
   const name = useSelector((state) => state.auth.name);
@@ -23,90 +24,93 @@ export const Login = () => {
   }, [dispatch, name, navigate]);
 
   return (
-    <div className="flex flex-col min-h-screen overflow-hidden">
-      <main className="flex-grow">
-        <section className="bg-gradient-to-b from-gray-100 to-white">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6">
-            <div className="pt-32 pb-12 md:pt-40 md:pb-20">
-              {/* Page Heading */}
-              <div className="max-w-3xl mx-auto text-center pb-12 md:pb-20">
-                <h1 className="h1">Welcome back. </h1>
-              </div>
+    <>
+      <Header />
+      <div className="flex flex-col min-h-screen overflow-hidden">
+        <main className="flex-grow">
+          <section className="bg-gradient-to-b from-gray-100 to-white">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6">
+              <div className="pt-32 pb-12 md:pt-40 md:pb-20">
+                {/* Page Heading */}
+                <div className="max-w-3xl mx-auto text-center pb-12 md:pb-20">
+                  <h1 className="h1">Welcome back. </h1>
+                </div>
 
-              {/* Form */}
-              <div className="max-w-sm mx-auto">
-                <Formik
-                  initialValues={{
-                    email: '',
-                    password: '',
-                  }}
-                  validationSchema={Yup.object({
-                    email: Yup.string()
-                      .email('Invalid email address')
-                      .required('Required'),
-                    password: Yup.string()
-                      .min(4, 'Must be 4 characters or more.')
-                      .required('Required'),
-                  })}
-                  onSubmit={async (values) => {
-                    try {
-                      const res = await dispatch(loginUser(values)).unwrap();
-                      // if signup succeeded.
-                      navigate('/dashboard');
-                    } catch (err) {
-                      // if signup failed.
-                      toast.error(err?.message ? err.message : err);
-                      dispatch(clearState());
-                    }
-                  }}
-                >
-                  {({ isSubmitting }) => (
-                    <Form>
-                      <MyTextInput
-                        label="Email Address"
-                        name="email"
-                        type="email"
-                        placeholder="Enter your email address"
-                      />
-
-                      <MyTextInput
-                        label="Password"
-                        name="password"
-                        type="password"
-                        placeholder="Enter your password"
-                      />
-
-                      <div className="flex flex-wrap -mx-3 mt-6">
-                        <div className="w-full px-3">
-                          <button
-                            type="submit"
-                            className="btn text-white bg-blue-600 hover:bg-blue-700 w-full"
-                            disabled={isSubmitting}
-                          >
-                            {isSubmitting ? 'Submitting...' : 'Sign in'}
-                          </button>
-                        </div>
-                      </div>
-                    </Form>
-                  )}
-                </Formik>
-
-                <div className="text-gray-600 text-center mt-6">
-                  Don't You have an account?{' '}
-                  <Link
-                    to="/signup"
-                    className="text-blue-600 hover:underline transition duration-150 ease-in-out"
+                {/* Form */}
+                <div className="max-w-sm mx-auto">
+                  <Formik
+                    initialValues={{
+                      email: '',
+                      password: '',
+                    }}
+                    validationSchema={Yup.object({
+                      email: Yup.string()
+                        .email('Invalid email address')
+                        .required('Required'),
+                      password: Yup.string()
+                        .min(4, 'Must be 4 characters or more.')
+                        .required('Required'),
+                    })}
+                    onSubmit={async (values) => {
+                      try {
+                        const res = await dispatch(loginUser(values)).unwrap();
+                        // if signup succeeded.
+                        navigate('/dashboard');
+                      } catch (err) {
+                        // if signup failed.
+                        toast.error(err?.message ? err.message : err);
+                        dispatch(clearState());
+                      }
+                    }}
                   >
-                    Sign up
-                  </Link>
+                    {({ isSubmitting }) => (
+                      <Form>
+                        <MyTextInput
+                          label="Email Address"
+                          name="email"
+                          type="email"
+                          placeholder="Enter your email address"
+                        />
+
+                        <MyTextInput
+                          label="Password"
+                          name="password"
+                          type="password"
+                          placeholder="Enter your password"
+                        />
+
+                        <div className="flex flex-wrap -mx-3 mt-6">
+                          <div className="w-full px-3">
+                            <button
+                              type="submit"
+                              className="btn text-white bg-blue-600 hover:bg-blue-700 w-full"
+                              disabled={isSubmitting}
+                            >
+                              {isSubmitting ? 'Submitting...' : 'Sign in'}
+                            </button>
+                          </div>
+                        </div>
+                      </Form>
+                    )}
+                  </Formik>
+
+                  <div className="text-gray-600 text-center mt-6">
+                    Don't You have an account?{' '}
+                    <Link
+                      to="/signup"
+                      className="text-blue-600 hover:underline transition duration-150 ease-in-out"
+                    >
+                      Sign up
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-      </main>
-      <Toaster />
-    </div>
+          </section>
+        </main>
+        <Toaster />
+      </div>
+    </>
   );
 };
 

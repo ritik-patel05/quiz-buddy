@@ -10,7 +10,7 @@ import {
   loginUser,
   clearState,
 } from '../../redux/authSlice';
-import { QuizzesCreated, CreateQuiz } from '../../components';
+import { QuizzesCreated, CreateQuiz, Header } from '../../components';
 
 export const Dashboard = () => {
   const dispatch = useDispatch();
@@ -42,26 +42,29 @@ export const Dashboard = () => {
     setValue(newValue);
   };
   return (
-    <Box
-      className="pt-20 max-w-6xl mx-auto px-5 sm:px-6"
-      sx={{ width: '100%', typography: 'body1' }}
-    >
-      <TabContext value={value}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <TabList onChange={handleChange} aria-label="lab API tabs example">
-            <Tab label="My Quizzes" value="1" />
-            <Tab label="Quizzes Given" value="2" />
-            <Tab label="Create Quiz" value="3" />
-          </TabList>
-        </Box>
-        <TabPanel value="1">
-          <QuizzesCreated />
-        </TabPanel>
-        <TabPanel value="2"></TabPanel>
-        <TabPanel value="3">
-          <CreateQuiz />
-        </TabPanel>
-      </TabContext>
-    </Box>
+    <>
+      <Header />
+      <Box
+        className="pt-20 max-w-6xl mx-auto px-5 sm:px-6"
+        sx={{ width: '100%', typography: 'body1' }}
+      >
+        <TabContext value={value}>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <TabList onChange={handleChange} aria-label="lab API tabs example">
+              <Tab label="My Quizzes" value="1" />
+              <Tab label="Quizzes Given" value="2" />
+              <Tab label="Create Quiz" value="3" />
+            </TabList>
+          </Box>
+          <TabPanel value="1">
+            <QuizzesCreated />
+          </TabPanel>
+          <TabPanel value="2"></TabPanel>
+          <TabPanel value="3">
+            <CreateQuiz />
+          </TabPanel>
+        </TabContext>
+      </Box>
+    </>
   );
 };
