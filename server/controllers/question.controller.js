@@ -1,54 +1,14 @@
-const Option = require("../models/option.model");
 const Question = require("../models/question.model");
 const Quiz = require("../models/quiz.model");
-
-let correctOption;
-let optionsIds;
-
-async function asyncForLoop(options) {
-  try {
-    const results = [];
-    options.forEach((option) => {
-      // Good: all asynchronous operations are immediately started.
-      const newOption = new Option({
-        optionBody: option.optionBody,
-      });
-
-      results.push(newOption.save());
-      optionsIds.push(newOption._id);
-
-      if (option?.isCorrect === true) {
-        correctOption = newOption._id;
-      }
-    });
-    // Now that all the asynchronous operations are running, here we wait until they all complete.
-    // and return a promise.
-    return Promise.all(results);
-  } catch (error) {
-    // handles rejection, of any of the promises.
-    console.log("Error in asyncForLoop, ", error);
-    return false;
-  }
-}
 
 // Create a Question
 const createQuestion = async (req, res) => {
   try {
-    const { questionBody, options } = req.body;
+    const { questionBody } = req.body;
     const { quizId } = req.params;
 
-    correctOption = null;
-    optionsIds = [];
-
-    // create new options and save them.
-    await asyncForLoop(options);
-
-    // create question
-    console.log("After iterating, correctOption is: ", correctOption);
     let question = new Question({
       questionBody,
-      correctOption,
-      options: optionsIds,
     });
     question = await question.save();
 
@@ -70,4 +30,44 @@ const createQuestion = async (req, res) => {
   }
 };
 
-module.exports = { createQuestion };
+// Get question details
+const getQuestionDetails = async (req, res) => {
+  try {
+    const { questionId } = req.params;
+
+    const question = await Question.findById(questionId).lean().exec();
+
+    return res.status(200).json({
+      question,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal server error.",
+    });
+  }
+};
+
+// Edit Question
+const editQuestion = async (req, res) => {
+  try {
+    const { questionId } = req.params;
+
+    const question = await Question.findOneAndUpdate(
+      { _id: questionId },
+      req.body,
+      { new: true }
+    );
+
+    return res.status(200).json({
+      question,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal server error.",
+    });
+  }
+};
+
+module.exports = { createQuestion, getQuestionDetails, editQuestion };

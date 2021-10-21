@@ -1,7 +1,5 @@
-const { response } = require("express");
 const Quiz = require("../models/quiz.model");
 const User = require("../models/user.model");
-const Option = require("../models/option.model");
 const Topic = require("../models/topic.model");
 
 // Create a new quiz.
@@ -81,21 +79,50 @@ const createQuiz = async (req, res) => {
 };
 
 const getAllQuizDetails = async (req, res) => {
-  const { userId } = req.user;
+  try {
+    const { userId } = req.user;
 
-  const user = await User.findById(userId)
-    .select("quizzesCreated")
-    .populate({
-      path: "quizzesCreated",
-      model: "Quiz",
-      select: "title topic time",
-      populate: { path: "topic", model: "Topic", select: "topic" },
-    })
-    .exec();
+    const user = await User.findById(userId)
+      .select("quizzesCreated")
+      .populate({
+        path: "quizzesCreated",
+        model: "Quiz",
+        select: "title topic time",
+        populate: { path: "topic", model: "Topic", select: "topic" },
+      })
+      .lean()
+      .exec();
 
-  return res.status(200).json({
-    quizzes: user.quizzesCreated,
-  });
+    return res.status(200).json({
+      quizzes: user.quizzesCreated,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal server error.",
+    });
+  }
 };
 
-module.exports = { createQuiz, getAllQuizDetails };
+const getQuizDetails = async (req, res) => {
+  try {
+    const { quizId } = req.params;
+
+    const quiz = await Quiz.findById(quizId)
+      .populate({ path: "topic", model: "Topic", select: "topic" })
+      .lean()
+      .exec();
+
+    console.log(quiz);
+    return res.status(200).json({
+      quiz,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal server error.",
+    });
+  }
+};
+
+module.exports = { createQuiz, getAllQuizDetails, getQuizDetails };

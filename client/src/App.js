@@ -4,7 +4,14 @@ import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 import axios from 'axios';
 import { logout, getNewAccessToken, clearState } from './redux/authSlice';
-import { Home, Login, Signup, Dashboard } from './pages/index';
+import {
+  Home,
+  Login,
+  Signup,
+  Dashboard,
+  EditQuiz,
+  QuizInfo,
+} from './pages/index';
 import { Header } from './components/index';
 
 axios.defaults.withCredentials = true;
@@ -41,9 +48,11 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="login" element={<Login />} />
+        <Route path="signup" element={<Signup />} />
+        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="dashboard/edit/:quizId" element={<EditQuiz />} />
+        <Route path="quiz/:quizId" element={<QuizInfo />} />
       </Routes>
     </div>
   );

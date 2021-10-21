@@ -13,7 +13,7 @@ export const QuizzesCreated = () => {
         ) : (
           <>
             {data.quizzes.map( (quiz, index) => (
-              <DisplayQuiz key={index} title={quiz.title} time={quiz.time} topic={quiz.topic.topic} />
+              <DisplayQuiz key={index} title={quiz.title} time={quiz.time} topic={quiz.topic.topic} to={`edit/${quiz._id}`} />
             ))}
           </>
         )}

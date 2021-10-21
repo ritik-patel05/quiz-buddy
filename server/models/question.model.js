@@ -8,15 +8,9 @@ const questionSchema = Schema(
       type: String,
       required: [true, "Question body is required."],
     },
-    options: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Option",
-      },
-    ],
+    options: [],
     correctOption: {
-      type: Schema.Types.ObjectId,
-      ref: "Option",
+      type: Number,
     },
   },
   // eslint-disable-next-line comma-dangle
