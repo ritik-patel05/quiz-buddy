@@ -33,7 +33,7 @@ const quizSchema = Schema(
       minlength: 4,
       maxlength: 4,
       required() {
-        return this.isPrivate === false;
+        return this.isPrivate === true;
       },
     },
     isPrivate: {
@@ -58,19 +58,15 @@ const quizSchema = Schema(
         },
         score: {
           type: Number,
-          required: [true, "Score of user in the quiz is required."],
         },
         response: {
           type: Array,
-          required: [true, "response for the quiz is required."],
         },
         started_at: {
           type: Date,
-          required: [true, "Start Time of quiz is required."],
         },
         ended_at: {
           type: Date,
-          required: [true, "End Time of quiz is required."],
         },
       },
     ],

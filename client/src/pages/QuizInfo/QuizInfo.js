@@ -1,12 +1,43 @@
 import { useState } from 'react';
 import { useParams } from 'react-router';
-import { Header, Quiz } from '../../components';
+import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+
 import useGetQuizDetails from '../../hooks/useGetQuizDetails';
+import { Header, Quiz } from '../../components';
+import { constants } from '../../util/constant';
+import { clearState } from '../../redux/quizOptionsSlice';
 
 export const QuizInfo = () => {
   const [isQuizStarted, setIsQuizStarted] = useState(false);
   const { quizId } = useParams();
   const { data, status, error } = useGetQuizDetails(quizId);
+
+  const dispatch = useDispatch();
+
+  const startQuizHandler = () => {
+    const callStartQuizApi = () => {
+      axios
+        .get(`${constants.backendUrl}/api/quiz/${quizId}/start`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('access-token')}`,
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          // Reset options of quiz
+          dispatch(clearState());
+          // Start the quiz
+          setIsQuizStarted(!isQuizStarted);
+        })
+        .catch((err) => {
+          toast.error('Server error. Please try again.');
+        });
+    };
+
+    callStartQuizApi();
+  };
 
   return (
     <>
@@ -19,7 +50,15 @@ export const QuizInfo = () => {
       {status === 'success' && (
         <>
           {isQuizStarted ? (
-            <Quiz />
+            <Quiz
+              quizId={quizId}
+              title={data.quiz.title}
+              topic={data.quiz.topic}
+              time={data.quiz.time}
+              correctResponseScore={data.quiz.scoreForCorrectResponse}
+              incorrectResponseScore={data.quiz.scoreForIncorrectResponse}
+              totalQuestions={data.quiz.questions.length}
+            />
           ) : (
             <>
               <Header />
@@ -41,7 +80,7 @@ export const QuizInfo = () => {
                     </div>
                   </div>
                   <button
-                    onClick={() => setIsQuizStarted(!isQuizStarted)}
+                    onClick={startQuizHandler}
                     className="btn-sm bg-blue-500 text-white"
                   >
                     Start Quiz
@@ -58,6 +97,7 @@ export const QuizInfo = () => {
           {error}
         </main>
       )}
+      <Toaster />
     </>
   );
 };

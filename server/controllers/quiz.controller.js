@@ -125,4 +125,54 @@ const getQuizDetails = async (req, res) => {
   }
 };
 
-module.exports = { createQuiz, getAllQuizDetails, getQuizDetails };
+const getQuizQuestions = async (req, res) => {
+  try {
+    const { quizId } = req.params;
+
+    const questions = await Quiz.findById(quizId)
+      .select("questions -_id")
+      .lean()
+      .exec();
+
+    console.log(questions);
+    return res.status(200).json(questions);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal server error.",
+    });
+  }
+};
+
+const startQuiz = async (req, res) => {
+  try {
+    const { quizId } = req.params;
+    const { userId } = req.user;
+
+    const quiz = await Quiz.findOneAndUpdate(
+      { _id: quizId },
+      {
+        $push: { usersParticipated: { user: userId, started_at: Date.now() } },
+      },
+      { new: true }
+    );
+
+    console.log(quiz);
+    return res.status(200).json({
+      message: "Quiz started",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal server error.",
+    });
+  }
+};
+
+module.exports = {
+  createQuiz,
+  getAllQuizDetails,
+  getQuizDetails,
+  getQuizQuestions,
+  startQuiz,
+};

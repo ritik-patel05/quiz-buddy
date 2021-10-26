@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+	/* Chrome, Safari and Opera */
+	.no-scrollbar::-webkit-scrollbar {
+		display: none;
+	}
+
+	.no-scrollbar {
+		-ms-overflow-style: none;  /* IE and Edge */
+		scrollbar-width: none;  /* Firefox */
+	}
+}
+
 .blur {
 	backdrop-filter: blur(3px);
 	-webkit-backdrop-filter: blur(3px);
@@ -36,8 +48,34 @@
 	@apply text-2xl font-bold leading-snug tracking-tight;
 }
 
+.fixh {
+	height: calc(100vh - 160px);
+}
+
+.bullet {
+	@apply h-2 w-2 rounded border-solid border
+}
+
+.question-box {
+	@apply flex h-10 w-10 items-center justify-center cursor-pointer rounded-r bg-base-1
+}
+
+.answered {
+	@apply border-none text-green-400 bg-green-50
+}
+
+.active {
+	@apply border border-solid border-primary
+}
+
+.unanswered {
+	@apply border border-solid border-divider
+}
+
 html {
 	scroll-behavior: smooth;
+	word-break: break-word;
+	text-rendering: optimizeLegibility;
 }
 
 :focus,
