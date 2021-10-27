@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import useGetQuizDetails from '../../hooks/useGetQuizDetails';
 import { Header, Quiz } from '../../components';
 import { constants } from '../../util/constant';
-import { clearState } from '../../redux/quizOptionsSlice';
+import { clearState } from '../../redux/quizSlice';
 
 export const QuizInfo = () => {
   const [isQuizStarted, setIsQuizStarted] = useState(false);
@@ -54,7 +54,7 @@ export const QuizInfo = () => {
               quizId={quizId}
               title={data.quiz.title}
               topic={data.quiz.topic}
-              time={data.quiz.time}
+              timeInMinutes={data.quiz.time}
               correctResponseScore={data.quiz.scoreForCorrectResponse}
               incorrectResponseScore={data.quiz.scoreForIncorrectResponse}
               totalQuestions={data.quiz.questions.length}

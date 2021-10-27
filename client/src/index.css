@@ -52,6 +52,14 @@
 	height: calc(100vh - 160px);
 }
 
+.fixh1 {
+	max-height: calc(100% - 64px);
+}
+
+.fixw {
+	max-width: calc(100% - 64px);
+}
+
 .bullet {
 	@apply h-2 w-2 rounded border-solid border
 }
@@ -77,6 +85,18 @@ html {
 	word-break: break-word;
 	text-rendering: optimizeLegibility;
 }
+
+fieldset {
+	border-bottom: 1px solid #eee;
+	margin-bottom: 21px;
+	padding-bottom: 10.5px;
+	position: relative;
+	padding: 0;
+	margin: 0;
+	border: 0;
+	min-width: 0;
+  }
+  
 
 :focus,
 button:focus,

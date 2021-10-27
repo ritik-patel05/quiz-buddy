@@ -15,6 +15,9 @@ module.exports = {
         'primary': '#3C4852',
         'base-0': '#FCFCFC',
         'base-1': '#FFFFFF'
+      },
+      spacing: {
+        '140': '35rem'
       }
     },
     fontFamily: {

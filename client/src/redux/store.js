@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './authSlice';
-import quizOptionsReducer from './quizOptionsSlice';
+import quizOptionsReducer from './quizSlice';
 
 export default configureStore({
   reducer: {

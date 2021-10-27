@@ -14,7 +14,7 @@ export const quizOptionsSlice = createSlice({
       const { questionId, option } = action.payload;
       console.log("in setOption reducer", action.payload);
       state.response[questionId] = option;
-    },
+    }
   },
 });
 

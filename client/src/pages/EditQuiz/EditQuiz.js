@@ -73,7 +73,7 @@ export const EditQuiz = () => {
 
   const handleAddOptionSurely = () => {
     if (options.length === 4) {
-      toast.error('Can only add at max 4 options.')
+      toast.error('Can only add at max 4 options.');
       return;
     }
     console.log('clicked');
