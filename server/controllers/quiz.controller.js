@@ -149,17 +149,76 @@ const startQuiz = async (req, res) => {
     const { quizId } = req.params;
     const { userId } = req.user;
 
-    const quiz = await Quiz.findOneAndUpdate(
-      { _id: quizId },
-      {
-        $push: { usersParticipated: { user: userId, started_at: Date.now() } },
-      },
-      { new: true }
-    );
+    // If user already exits in usersParticipated, reset the fields of quiz.
+    // else, add new user to usersParticipated.
+    const isUserExists = await Quiz.findOne({
+      _id: quizId,
+      "usersParticipated.user": userId,
+    })
+      .lean()
+      .exec();
+
+    let quiz;
+    if (isUserExists) {
+      console.log("Yes user exists");
+      const objReset = {
+        "usersParticipated.$.started_at": Date.now(),
+        "usersParticipated.$.response": {},
+      };
+      quiz = await Quiz.findOneAndUpdate(
+        { _id: quizId, "usersParticipated.user": userId },
+        { $set: objReset },
+        { new: true }
+      );
+    } else {
+      console.log("new user added");
+      quiz = await Quiz.findOneAndUpdate(
+        { _id: quizId },
+        {
+          $push: {
+            usersParticipated: {
+              user: userId,
+              started_at: Date.now(),
+              response: {},
+            },
+          },
+        },
+        { new: true }
+      );
+    }
 
     console.log(quiz);
     return res.status(200).json({
       message: "Quiz started",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal server error.",
+    });
+  }
+};
+
+const saveOption = async (req, res) => {
+  try {
+    const { quizId } = req.params;
+    const { userId } = req.user;
+
+    const { questionId, optionSelected } = req.body;
+
+    const toSet = { $set: {} };
+    toSet.$set[`usersParticipated.$.response.${questionId}`] = optionSelected;
+
+    const updatedQuiz = await Quiz.findOneAndUpdate(
+      { _id: quizId, "usersParticipated.user": userId },
+      toSet,
+      { new: true }
+    );
+
+    console.log("updated -> ", updatedQuiz);
+
+    return res.status(200).json({
+      quiz: updatedQuiz,
     });
   } catch (error) {
     console.log(error);
@@ -175,4 +234,5 @@ module.exports = {
   getQuizDetails,
   getQuizQuestions,
   startQuiz,
+  saveOption,
 };

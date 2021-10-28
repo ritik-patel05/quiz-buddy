@@ -60,7 +60,7 @@ const quizSchema = Schema(
           type: Number,
         },
         response: {
-          type: Array,
+          type: Object,
         },
         started_at: {
           type: Date,
