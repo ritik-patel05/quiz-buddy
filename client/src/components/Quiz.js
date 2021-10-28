@@ -5,6 +5,8 @@ import useGetQuestions from '../hooks/useGetQuestions';
 import { setOption } from '../redux/quizSlice';
 import { Formik, Field, Form } from 'formik';
 import { ConfirmationDialog } from './ConfirmationDialog';
+import axios from 'axios';
+import { constants } from '../util/constant';
 
 export const Quiz = ({
   quizId,
@@ -111,6 +113,22 @@ export const Quiz = ({
     setIsEndTestDialogBoxOpen(false);
   };
 
+  const callSaveQuestionApi = (option) => {
+    const payload = {questionId: activeQuestionId, optionSelected: option};
+    axios
+      .post(`${constants.backendUrl}/api/quiz/${quizId}/save`, payload, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access-token')}`,
+        },
+      })
+      .then((res) => {
+        console.log(`Success, Question saved: ${activeQuestionId}, with option: ${option}`);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   console.log(optionsSelected);
 
   return (
@@ -160,7 +178,12 @@ export const Quiz = ({
                       option: values.options,
                     };
                     // if any option is selected
-                    if (values.options !== '-1') dispatch(setOption(payload));
+                    // save the option in global state
+                    // and call api to save it.
+                    if (values.options !== '-1') {
+                      dispatch(setOption(payload));
+                      callSaveQuestionApi(values.options);
+                    }
                     // if it is not the last question
                     if (activeQuestionId + 1 !== totalQuestions)
                       setActiveQuestionId(activeQuestionId + 1);
