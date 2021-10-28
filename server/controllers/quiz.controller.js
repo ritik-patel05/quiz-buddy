@@ -228,6 +228,71 @@ const saveOption = async (req, res) => {
   }
 };
 
+const endTest = async (req, res) => {
+  try {
+    const { quizId } = req.params;
+    const { userId } = req.user;
+
+    // get all questions of this quiz.
+    const quiz = await Quiz.findOne({
+      _id: quizId,
+      "usersParticipated.user": userId,
+    })
+      .select("questions usersParticipated")
+      .populate({
+        path: "questions",
+        model: "Question",
+        select: "correctOption",
+      })
+      .populate("scoreForCorrectResponse scoreForIncorrectResponse")
+      .lean()
+      .exec();
+
+    const correctResponse = {};
+    quiz.questions.forEach((question, index) => {
+      correctResponse[String(index)] = String(question.correctOption);
+    });
+
+    console.log("correct -> ", correctResponse);
+
+    // Compare to responses of user and calculate score
+    let totalScore = 0;
+    const userResponse = quiz.usersParticipated[0].response;
+    console.log("user response -> ", userResponse);
+    Object.keys(userResponse).forEach((key) => {
+      if (key in correctResponse) {
+        if (correctResponse[key] === userResponse[key]) {
+          totalScore += quiz.scoreForCorrectResponse;
+        } else {
+          totalScore -= quiz.scoreForIncorrectResponse;
+        }
+      }
+    });
+
+    console.log(totalScore);
+    // Update the score and ended_at parameters.
+    const objToAdd = {
+      "usersParticipated.$.ended_at": Date.now(),
+      "usersParticipated.$.score": totalScore,
+    };
+    const updatedQuiz = await Quiz.findOneAndUpdate(
+      { _id: quizId, "usersParticipated.user": userId },
+      objToAdd,
+      { new: true }
+    );
+
+    console.log("updated Quiz -> ", updatedQuiz);
+    return res.status(200).json({
+      message: "success",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal server error.",
+    });
+  }
+};
+
 module.exports = {
   createQuiz,
   getAllQuizDetails,
@@ -235,4 +300,5 @@ module.exports = {
   getQuizQuestions,
   startQuiz,
   saveOption,
+  endTest,
 };
