@@ -12,7 +12,12 @@ import { clearState } from '../../redux/quizSlice';
 export const QuizInfo = () => {
   const [isQuizStarted, setIsQuizStarted] = useState(false);
   const { quizId } = useParams();
-  const { data, status, error } = useGetQuizDetails(quizId);
+  const { refetch, data, status, error } = useGetQuizDetails(quizId);
+
+  const handleQuizClose = () => {
+    refetch();
+    setIsQuizStarted(false);
+  }
 
   const dispatch = useDispatch();
 
@@ -29,7 +34,7 @@ export const QuizInfo = () => {
           // Reset options of quiz
           dispatch(clearState());
           // Start the quiz
-          setIsQuizStarted(!isQuizStarted);
+          setIsQuizStarted(true);
         })
         .catch((err) => {
           toast.error('Server error. Please try again.');
@@ -41,6 +46,7 @@ export const QuizInfo = () => {
 
   return (
     <>
+      {isQuizStarted === false && <Header />}
       {status === 'loading' && (
         <main className="w-full max-w-2xl font-roboto pt-20 mx-auto px-5 sm:px-6">
           Loading...
@@ -58,10 +64,9 @@ export const QuizInfo = () => {
               correctResponseScore={data.quiz.scoreForCorrectResponse}
               incorrectResponseScore={data.quiz.scoreForIncorrectResponse}
               totalQuestions={data.quiz.questions.length}
+              triggerCloseQuiz={handleQuizClose}
             />
-          ) : (
-            <>
-              <Header />
+          ) : (              
               <main className="w-full max-w-2xl font-roboto pt-20 mx-auto px-5 sm:px-6">
                 <div className="bg-white shadow-xl p-4">
                   <h2 className="mt-1 mb-3 font-semibold text-lg">
@@ -81,13 +86,15 @@ export const QuizInfo = () => {
                   </div>
                   <button
                     onClick={startQuizHandler}
-                    className="btn-sm bg-blue-500 text-white"
+                    className="btn-sm bg-blue-500 text-white mb-4"
                   >
-                    Start Quiz
+                    {data.quiz.hasAttemptedPreviously === false ? "Start Quiz" : "Reattempt Quiz" }
                   </button>
+                  <p className="flex font-medium">
+                    Your previous attempt score: {data.quiz.userScore}  
+                  </p>
                 </div>
               </main>
-            </>
           )}
         </>
       )}

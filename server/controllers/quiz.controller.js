@@ -23,7 +23,10 @@ const createQuiz = async (req, res) => {
 
     const createdBy = req.user.userId;
     // Create new topic if it doesn't exist.
-    const isTopicExists = await Topic.findOne({ topic }).exec();
+    const isTopicExists = await Topic.findOne({ topic })
+      .select("_id")
+      .lean()
+      .exec();
     let currTopic = isTopicExists;
     if (!isTopicExists) {
       currTopic = new Topic({
@@ -107,11 +110,30 @@ const getAllQuizDetails = async (req, res) => {
 const getQuizDetails = async (req, res) => {
   try {
     const { quizId } = req.params;
+    const { userId } = req.user;
 
-    const quiz = await Quiz.findById(quizId)
+    let quiz = await Quiz.findById(quizId)
       .populate({ path: "topic", model: "Topic", select: "topic" })
       .lean()
       .exec();
+
+    const isUserExists = await Quiz.findOne({
+      _id: quizId,
+      "usersParticipated.user": userId,
+    })
+      .select("usersParticipated -_id")
+      .lean()
+      .exec();
+
+    if (isUserExists) {
+      quiz = {
+        ...quiz,
+        hasAttemptedPreviously: true,
+        userScore: isUserExists.usersParticipated[0].score,
+      };
+    } else {
+      quiz = { ...quiz, hasAttemptedPreviosuly: false };
+    }
 
     console.log(quiz);
     return res.status(200).json({
@@ -155,6 +177,7 @@ const startQuiz = async (req, res) => {
       _id: quizId,
       "usersParticipated.user": userId,
     })
+      .select("_id")
       .lean()
       .exec();
 
@@ -228,7 +251,7 @@ const saveOption = async (req, res) => {
   }
 };
 
-const endTest = async (req, res) => {
+const endQuiz = async (req, res) => {
   try {
     const { quizId } = req.params;
     const { userId } = req.user;
@@ -300,5 +323,5 @@ module.exports = {
   getQuizQuestions,
   startQuiz,
   saveOption,
-  endTest,
+  endQuiz,
 };

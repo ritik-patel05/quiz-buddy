@@ -7,6 +7,7 @@ import { Formik, Field, Form } from 'formik';
 import { ConfirmationDialog } from './ConfirmationDialog';
 import axios from 'axios';
 import { constants } from '../util/constant';
+import toast, { Toaster } from 'react-hot-toast';
 
 export const Quiz = ({
   quizId,
@@ -16,6 +17,7 @@ export const Quiz = ({
   correctResponseScore,
   incorrectResponseScore,
   totalQuestions,
+  triggerCloseQuiz,
 }) => {
   const {
     data: allQuestionsData,
@@ -111,6 +113,24 @@ export const Quiz = ({
 
   const handleDialogBoxClose = (message) => {
     setIsEndTestDialogBoxOpen(false);
+
+    if (message === "success") {
+      axios
+        .get(`${constants.backendUrl}/api/quiz/${quizId}/end`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('access-token')}`,
+          },
+        })
+        .then((res) => {
+          console.log("Success, Quiz ended");
+          // Trigger parent state update to close the quiz.
+          triggerCloseQuiz();
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error("Server error");
+        });
+    }
   };
 
   const callSaveQuestionApi = (option) => {
@@ -357,6 +377,7 @@ export const Quiz = ({
           />
         </>
       )}
+      <Toaster />
     </main>
   );
 };
