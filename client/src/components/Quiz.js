@@ -54,7 +54,10 @@ export const Quiz = ({
   useEffect(() => {
     const intervalId = setInterval(() => {
       // clear countdown when date is reached
-      if (timeInSeconds <= 0) return false;
+      if (timeInSeconds <= 0) {
+        triggerCloseQuiz();
+        return false;
+      }
 
       let currTime = timeInSeconds;
       console.log(currTime, 'timeee');
