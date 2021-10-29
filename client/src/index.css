@@ -86,6 +86,10 @@ html {
 	text-rendering: optimizeLegibility;
 }
 
+body {
+	@apply bg-base-0 h-screen
+}
+
 fieldset {
 	border-bottom: 1px solid #eee;
 	margin-bottom: 21px;
@@ -95,7 +99,7 @@ fieldset {
 	margin: 0;
 	border: 0;
 	min-width: 0;
-  }
+}
   
 
 :focus,

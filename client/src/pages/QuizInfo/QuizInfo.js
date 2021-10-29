@@ -68,7 +68,7 @@ export const QuizInfo = () => {
             />
           ) : (              
               <main className="w-full h-screen max-w-2xl font-roboto pt-20 mx-auto px-5 sm:px-6">
-                <div className="bg-base-1 shadow-xl p-4">
+                <div className="bg-base-1 shadow-xl p-5 sm:p-9">
                   <h2 className="mt-1 mb-3 font-semibold text-lg">
                     {data.quiz.title}
                   </h2>

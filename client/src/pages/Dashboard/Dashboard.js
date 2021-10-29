@@ -45,7 +45,7 @@ export const Dashboard = () => {
     <>
       <Header />
       <Box
-        className="pt-20 max-w-6xl mx-auto px-5 sm:px-6 h-screen"
+        className="pt-20 max-w-6xl mx-auto px-5 sm:px-6"
         sx={{ width: '100%', typography: 'body1' }}
       >
         <TabContext value={value}>
