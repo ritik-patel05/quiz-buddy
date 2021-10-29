@@ -215,7 +215,7 @@ export const EditQuiz = () => {
                             >
                               {options.map((option, index) => {
                                 return (
-                                  <option key={index} value={index + 1}>
+                                  <option key={index} value={index}>
                                     {index + 1}
                                   </option>
                                 );

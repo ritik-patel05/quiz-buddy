@@ -81,7 +81,7 @@ const createQuiz = async (req, res) => {
   }
 };
 
-const getAllQuizDetails = async (req, res) => {
+const getAllCreatedQuizzes = async (req, res) => {
   try {
     const { userId } = req.user;
 
@@ -330,9 +330,36 @@ const endQuiz = async (req, res) => {
   }
 };
 
+const getAllGivenQuizzes = async (req, res) => {
+  try {
+    const { userId } = req.user;
+
+    const user = await User.findById(userId)
+      .select("quizzesCreated")
+      .populate({
+        path: "quizzesCreated",
+        model: "Quiz",
+        select: "title topic time",
+        populate: { path: "topic", model: "Topic", select: "topic" },
+      })
+      .lean()
+      .exec();
+
+    return res.status(200).json({
+      quizzes: user.quizzesCreated,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal server error.",
+    })
+  }
+};
+
 module.exports = {
   createQuiz,
-  getAllQuizDetails,
+  getAllCreatedQuizzes,
+  getAllGivenQuizzes,
   getQuizDetails,
   getQuizQuestions,
   startQuiz,

@@ -10,7 +10,7 @@ import {
   loginUser,
   clearState,
 } from '../../redux/authSlice';
-import { QuizzesCreated, CreateQuiz, Header } from '../../components';
+import { QuizzesCreated, CreateQuiz, Header, QuizzesGiven } from '../../components';
 
 export const Dashboard = () => {
   const dispatch = useDispatch();
@@ -50,7 +50,7 @@ export const Dashboard = () => {
       >
         <TabContext value={value}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <TabList onChange={handleChange} aria-label="lab API tabs example">
+            <TabList onChange={handleChange} aria-label="lab API tabs example" variant="scrollable" scrollButtons allowScrollButtonsMobile>
               <Tab label="My Quizzes" value="1" />
               <Tab label="Quizzes Given" value="2" />
               <Tab label="Create Quiz" value="3" />
@@ -59,7 +59,9 @@ export const Dashboard = () => {
           <TabPanel value="1">
             <QuizzesCreated />
           </TabPanel>
-          <TabPanel value="2"></TabPanel>
+          <TabPanel value="2">
+            <QuizzesGiven />
+          </TabPanel>
           <TabPanel value="3">
             <CreateQuiz />
           </TabPanel>

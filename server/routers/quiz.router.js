@@ -1,7 +1,8 @@
 const express = require("express");
 const {
   createQuiz,
-  getAllQuizDetails,
+  getAllCreatedQuizzes,
+  getAllGivenQuizzes,
   getQuizDetails,
   getQuizQuestions,
   startQuiz,
@@ -11,7 +12,8 @@ const {
 
 const router = express.Router();
 
-router.route("/").get(getAllQuizDetails);
+router.route("/created-quizzes").get(getAllCreatedQuizzes);
+router.route("/given-quizzes").get(getAllGivenQuizzes);
 router.route("/create").post(createQuiz);
 router.route("/:quizId").get(getQuizDetails);
 router.route("/:quizId/questions").get(getQuizQuestions);

@@ -1,8 +1,8 @@
 import { DisplayQuiz } from '.';
-import useGetCreatedQuizzes from '../hooks/useGetCreatedQuizzes';
+import useGetGivenQuizzes from '../hooks/useGetGivenQuizzes';
 
-export const QuizzesCreated = () => {
-  const { status, data, error } = useGetCreatedQuizzes();
+export const QuizzesGiven = () => {
+  const { status, data, error } = useGetGivenQuizzes();
   return (
     <section>
       <div>
@@ -13,7 +13,7 @@ export const QuizzesCreated = () => {
         ) : (
           <>
             {data.quizzes.map( (quiz, index) => (
-              <DisplayQuiz key={index} isGivenQuizzesTab={false} title={quiz.title} time={quiz.time} topic={quiz.topic.topic} to={`edit/${quiz._id}`} />
+              <DisplayQuiz key={index} isGivenQuizzesTab={true} title={quiz.title} time={quiz.time} topic={quiz.topic.topic} to={`/quiz/${quiz._id}`} />
             ))}
           </>
         )}
