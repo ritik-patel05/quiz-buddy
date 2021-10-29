@@ -31,7 +31,9 @@ const createQuiz = async (req, res) => {
     if (!isTopicExists) {
       currTopic = new Topic({
         topic,
+        quizzes: [],
       });
+      currTopic = await currTopic.save();
     }
 
     // Add quizCode if isPrivate is true.
@@ -61,8 +63,12 @@ const createQuiz = async (req, res) => {
     }
     const savedQuiz = await quiz.save();
 
-    currTopic.quizzes.push(savedQuiz);
-    currTopic = await currTopic.save();
+    // Add quiz to this topic.
+    await Topic.updateOne(
+      { _id: currTopic._id },
+      { $push: { quizzes: savedQuiz._id } },
+      { new: true }
+    );
 
     await User.updateOne(
       { _id: createdBy },
@@ -188,14 +194,14 @@ const startQuiz = async (req, res) => {
         "usersParticipated.$.started_at": Date.now(),
         "usersParticipated.$.response": {},
       };
-      quiz = await Quiz.findOneAndUpdate(
+      quiz = await Quiz.updateOne(
         { _id: quizId, "usersParticipated.user": userId },
         { $set: objReset },
         { new: true }
       );
     } else {
       console.log("new user added");
-      quiz = await Quiz.findOneAndUpdate(
+      quiz = await Quiz.updateOne(
         { _id: quizId },
         {
           $push: {
@@ -232,7 +238,7 @@ const saveOption = async (req, res) => {
     const toSet = { $set: {} };
     toSet.$set[`usersParticipated.$.response.${questionId}`] = optionSelected;
 
-    const updatedQuiz = await Quiz.findOneAndUpdate(
+    const updatedQuiz = await Quiz.updateOne(
       { _id: quizId, "usersParticipated.user": userId },
       toSet,
       { new: true }
@@ -241,7 +247,7 @@ const saveOption = async (req, res) => {
     console.log("updated -> ", updatedQuiz);
 
     return res.status(200).json({
-      quiz: updatedQuiz,
+      message: "Successfully saved option."
     });
   } catch (error) {
     console.log(error);
@@ -298,7 +304,7 @@ const endQuiz = async (req, res) => {
       "usersParticipated.$.ended_at": Date.now(),
       "usersParticipated.$.score": totalScore,
     };
-    const updatedQuiz = await Quiz.findOneAndUpdate(
+    const updatedQuiz = await Quiz.updateOne(
       { _id: quizId, "usersParticipated.user": userId },
       objToAdd,
       { new: true }
@@ -312,7 +318,7 @@ const endQuiz = async (req, res) => {
     const update = {
       $addToSet: { quizzesGiven: quizId },
     };
-    const updatedUser = await User.findOneAndUpdate(conditions, update, {
+    const updatedUser = await User.updateOne(conditions, update, {
       new: true,
     });
 
@@ -352,7 +358,17 @@ const getAllGivenQuizzes = async (req, res) => {
     console.log(error);
     return res.status(500).json({
       message: "Internal server error.",
-    })
+    });
+  }
+};
+
+const getAllPublicQuiz = async (req, res) => {
+  try {
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal server error.",
+    });
   }
 };
 
