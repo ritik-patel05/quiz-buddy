@@ -304,6 +304,20 @@ const endQuiz = async (req, res) => {
       { new: true }
     );
 
+    // Add this quiz to quizzesGiven of user.
+    const conditions = {
+      _id: userId,
+      quizzesGiven: { $ne: quizId },
+    };
+    const update = {
+      $addToSet: { quizzesGiven: quizId },
+    };
+    const updatedUser = await User.findOneAndUpdate(conditions, update, {
+      new: true,
+    });
+
+    console.log("user updated -> ", updatedUser);
+
     console.log("updated Quiz -> ", updatedQuiz);
     return res.status(200).json({
       message: "success",
