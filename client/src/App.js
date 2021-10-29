@@ -44,7 +44,7 @@ function App() {
   }, [dispatch]);
 
   return (
-    <>
+    <div className='bg-base-0'>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="login" element={<Login />} />
@@ -53,7 +53,7 @@ function App() {
         <Route path="dashboard/edit/:quizId" element={<EditQuiz />} />
         <Route path="quiz/:quizId" element={<QuizInfo />} />
       </Routes>
-    </>
+    </div>
   );
 }
 
