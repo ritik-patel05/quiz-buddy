@@ -341,18 +341,20 @@ const getAllGivenQuizzes = async (req, res) => {
     const { userId } = req.user;
 
     const user = await User.findById(userId)
-      .select("quizzesCreated")
+      .select("quizzesGiven")
       .populate({
-        path: "quizzesCreated",
+        path: "quizzesGiven",
         model: "Quiz",
         select: "title topic time",
         populate: { path: "topic", model: "Topic", select: "topic" },
       })
       .lean()
       .exec();
+    
+    console.log(user);
 
     return res.status(200).json({
-      quizzes: user.quizzesCreated,
+      quizzes: user.quizzesGiven,
     });
   } catch (error) {
     console.log(error);
