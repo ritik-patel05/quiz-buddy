@@ -138,7 +138,7 @@ const getQuizDetails = async (req, res) => {
         userScore: isUserExists.usersParticipated[0].score,
       };
     } else {
-      quiz = { ...quiz, hasAttemptedPreviosuly: false };
+      quiz = { ...quiz, hasAttemptedPreviously: false };
     }
 
     console.log(quiz);
@@ -350,7 +350,7 @@ const getAllGivenQuizzes = async (req, res) => {
       })
       .lean()
       .exec();
-    
+
     console.log(user);
 
     return res.status(200).json({
@@ -368,6 +368,7 @@ const getAllPublicQuizzes = async (req, res) => {
   try {
     const quizzes = await Quiz.find({ isPrivate: false }, "-usersParticipated")
       .populate({ path: "createdBy", model: "User", select: "name" })
+      .populate({ path: "topic", model: "Topic", select: "topic" })
       .lean()
       .exec();
 
