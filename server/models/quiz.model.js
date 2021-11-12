@@ -29,9 +29,7 @@ const quizSchema = Schema(
       required: [true, "User who created this quiz is required."],
     },
     quizCode: {
-      type: Number,
-      minlength: 4,
-      maxlength: 4,
+      type: String,
       required() {
         return this.isPrivate === true;
       },

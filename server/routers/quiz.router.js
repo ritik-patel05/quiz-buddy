@@ -17,7 +17,7 @@ const router = express.Router();
 router.route("/created-quizzes").get(getAllCreatedQuizzes);
 router.route("/given-quizzes").get(getAllGivenQuizzes);
 router.route("/public-quizzes").get(getAllPublicQuizzes);
-router.route("/private-quiz").get(getQuizIdFromQuizCode);
+router.route("/private-quiz/:quizCode").get(getQuizIdFromQuizCode);
 router.route("/create").post(createQuiz);
 router.route("/:quizId").get(getQuizDetails);
 router.route("/:quizId/questions").get(getQuizQuestions);

@@ -41,6 +41,11 @@ export const Dashboard = () => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  const callNavigateParent = (url) => {
+    navigate(url);
+  }
+
   return (
     <>
       <Header />
@@ -58,7 +63,7 @@ export const Dashboard = () => {
             </TabList>
           </Box>
           <TabPanel value="1">
-            <GiveQuizzes />
+            <GiveQuizzes callNavigateParent={callNavigateParent} />
           </TabPanel>
           <TabPanel value="2">
             <QuizzesCreated />
