@@ -8,17 +8,23 @@ export const QuizzesGiven = () => {
       <div>
         {status === 'loading' ? (
           <span> Loading... </span>
-        ): status === 'error' ? (
+        ) : status === 'error' ? (
           <span> Error: {error.message} </span>
         ) : (
           <>
-            {data.quizzes.map( (quiz, index) => (
-              <DisplayQuiz key={index} isGivenQuizzesTab={true} title={quiz.title} time={quiz.time} topic={quiz.topic.topic} to={`/quiz/${quiz._id}`} />
+            {data.quizzes.map((quiz) => (
+              <DisplayQuiz
+                key={quiz._id}
+                isGivenQuizzesTab={true}
+                title={quiz.title}
+                time={quiz.time}
+                topic={quiz.topic.topic}
+                to={`/quiz/${quiz._id}`}
+              />
             ))}
           </>
         )}
       </div>
     </section>
-  )
+  );
 };
-  

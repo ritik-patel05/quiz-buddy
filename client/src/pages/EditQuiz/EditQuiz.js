@@ -140,7 +140,7 @@ export const EditQuiz = () => {
                     {data.quiz.questions.map((questionId, index) => {
                       return (
                         <div
-                          key={index}
+                          key={questionId}
                           className="text-center border-2 border-green-400"
                         >
                           <button
