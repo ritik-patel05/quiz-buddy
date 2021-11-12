@@ -8,6 +8,10 @@ import styled from '@emotion/styled';
 import useSaveQuestion from '../../hooks/useSaveQuestion';
 import useCreateQuestion from '../../hooks/useCreateQuestion';
 import { Header } from '../../components';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearState, getNewAccessToken } from '../../redux/authSlice';
+import { useNavigate } from 'react-router-dom';
+
 
 export const EditQuiz = () => {
   const { quizId } = useParams();
@@ -27,6 +31,28 @@ export const EditQuiz = () => {
     useState(false);
   const { mutateAsync: createQuestion, status: createQuestionStatus } =
     useCreateQuestion();
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const nameOfLoggedInUser = useSelector((state) => state.auth.name);
+
+  // check if user is logged in(if the cookie is still not expired.)
+  useEffect(() => {
+    const handleLogin = async () => {
+      if (localStorage.getItem('access-token') !== null) {
+        await dispatch(getNewAccessToken());
+        if (nameOfLoggedInUser === null) {
+          navigate('/login');
+        }
+      } else {
+        navigate('/login');
+      }
+    };
+
+    handleLogin();
+    dispatch(clearState());
+  }, [dispatch, nameOfLoggedInUser, navigate]);
 
   // As the data loads for quiz details.
   // Update the current active question id to the first.

@@ -1,25 +1,45 @@
-import { useState } from 'react';
-import { useParams } from 'react-router';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import useGetQuizDetails from '../../hooks/useGetQuizDetails';
 import { Header, Quiz } from '../../components';
 import { constants } from '../../util/constant';
-import { clearState } from '../../redux/quizSlice';
+import { getNewAccessToken, clearState } from '../../redux/authSlice';
 
 export const QuizInfo = () => {
   const [isQuizStarted, setIsQuizStarted] = useState(false);
   const { quizId } = useParams();
   const { refetch, data, status, error } = useGetQuizDetails(quizId);
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const nameOfLoggedInUser = useSelector((state) => state.auth.name);
+
+  // check if user is logged in(if the cookie is still not expired.)
+  useEffect(() => {
+    const handleLogin = async () => {
+      if (localStorage.getItem('access-token') !== null) {
+        await dispatch(getNewAccessToken());
+        if (nameOfLoggedInUser === null) {
+          navigate('/login');
+        }
+      } else {
+        navigate('/login');
+      }
+    };
+
+    handleLogin();
+    dispatch(clearState());
+  }, [dispatch, nameOfLoggedInUser, navigate]);
+
   const handleQuizClose = () => {
     refetch();
     setIsQuizStarted(false);
   }
-
-  const dispatch = useDispatch();
 
   const startQuizHandler = () => {
     const callStartQuizApi = () => {
