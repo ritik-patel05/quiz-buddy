@@ -90,9 +90,11 @@ export const QuizInfo = () => {
                   >
                     {data.quiz.hasAttemptedPreviously === false ? "Start Quiz" : "Reattempt Quiz" }
                   </button>
-                  <p className="flex font-medium">
-                    Your previous attempt score: {data.quiz.userScore}  
-                  </p>
+                  {data.quiz.hasAttemptedPreviously === true && (
+                    <p className="flex font-medium">
+                      Your previous attempt score: {data.quiz.userScore}  
+                    </p>
+                  )}
                 </div>
               </main>
           )}

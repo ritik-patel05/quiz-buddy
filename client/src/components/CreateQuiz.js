@@ -10,8 +10,8 @@ export const CreateQuiz = () => {
   const { mutateAsync: createQuiz } = useCreateQuiz();
 
   return (
-    <div className="flex flex-col min-h-screen overflow-hidden">
-      <main className="flex-grow">
+    <main className="flex flex-col min-h-screen overflow-hidden">
+      <div className="flex-grow">
         <section className="bg-gradient-to-b from-gray-100 to-white">
           <div className="max-w-6xl mx-auto px-4 sm:px-6">
             <div className="pt-8 pb-12 md:pb-20">
@@ -117,9 +117,9 @@ export const CreateQuiz = () => {
             </div>
           </div>
         </section>
-      </main>
+      </div>
       <Toaster />
-    </div>
+    </main>
   );
 };
 
