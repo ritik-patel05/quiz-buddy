@@ -1,6 +1,7 @@
 const Quiz = require("../models/quiz.model");
 const User = require("../models/user.model");
 const Topic = require("../models/topic.model");
+const { nanoid } = require("nanoid");
 
 // Create a new quiz.
 // Required fields: [topic, time, createdBy, scoreForCorrectResponse, scoreForIncorrectResponse,
@@ -39,7 +40,6 @@ const createQuiz = async (req, res) => {
     // Add quizCode if isPrivate is true.
     let quiz;
     if (isPrivate === true) {
-      const quizCode = Math.floor(1000 + Math.random() * 9000);
       quiz = new Quiz({
         topic: currTopic._id,
         title,
@@ -48,7 +48,7 @@ const createQuiz = async (req, res) => {
         scoreForCorrectResponse,
         scoreForIncorrectResponse,
         isPrivate,
-        quizCode,
+        quizCode: nanoid(),
       });
     } else {
       quiz = new Quiz({
@@ -247,7 +247,7 @@ const saveOption = async (req, res) => {
     console.log("updated -> ", updatedQuiz);
 
     return res.status(200).json({
-      message: "Successfully saved option."
+      message: "Successfully saved option.",
     });
   } catch (error) {
     console.log(error);
@@ -362,8 +362,40 @@ const getAllGivenQuizzes = async (req, res) => {
   }
 };
 
-const getAllPublicQuiz = async (req, res) => {
+const getAllPublicQuizzes = async (req, res) => {
   try {
+    const quizzes = await Quiz.find({ isPrivate: false }, "-usersParticipated")
+      .populate({ path: "createdBy", model: "User", select: "name" })
+      .lean()
+      .exec();
+
+    // console.log(quizzes);
+    return res.status(200).json({
+      quizzes,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal server error.",
+    });
+  }
+};
+
+const getQuizIdFromQuizCode = async (req, res) => {
+  try {
+    const { quizCode } = req.params;
+    const quiz = await Quiz.findOne({ quizCode }, "_id").lean().exec();
+
+    if (!quiz) {
+      return res.status(404).json({
+        message: "No quiz found",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Success",
+      quizId: quiz._id,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -381,4 +413,6 @@ module.exports = {
   startQuiz,
   saveOption,
   endQuiz,
+  getAllPublicQuizzes,
+  getQuizIdFromQuizCode,
 };
