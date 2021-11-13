@@ -18,7 +18,7 @@ const app = express();
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(helmet()); // Secure our Express apps by setting various HTTP headers.
+// app.use(helmet()); // Secure our Express apps by setting various HTTP headers.
 app.use(compression()); // Compress routes
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(cookieParser()); // Populate req.cookies with cookies
