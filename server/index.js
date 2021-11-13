@@ -1,3 +1,4 @@
+const path = require("path");
 const express = require("express");
 const compression = require("compression");
 const helmet = require("helmet");
@@ -26,13 +27,26 @@ app.use(cookieParser()); // Populate req.cookies with cookies
 initializeDBConnection();
 
 // Routes
-app.get("/", (req, res) => {
-  res.send("Hey, Welcome to the backend!");
-});
 
 app.use("/api/auth", authRouter);
 app.use("/api/quiz", checkAuth, quizRouter);
 app.use("/api/question", checkAuth, questionRouter);
+
+console.log(__dirname);
+console.log(path.join(__dirname, "../client/build"));
+if (constants.general.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../client/build")));
+
+  console.log("here in prod");
+  // anything that is not in our api.. will go to client
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../client/build/index.html"));
+  });
+} else {
+  app.get("/", (req, res) => {
+    res.send("Hey, Welcome to the backend!");
+  });
+}
 
 // Not found route Middleware
 app.use(notFoundHandlerRoute);
