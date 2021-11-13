@@ -1,8 +1,8 @@
-import { Formik, Form, useField } from 'formik';
-import * as Yup from 'yup';
-import toast, { Toaster } from 'react-hot-toast';
-import styled from '@emotion/styled';
-import useCreateQuiz from '../hooks/useCreateQuiz';
+import { Formik, Form, useField } from "formik";
+import * as Yup from "yup";
+import toast, { Toaster } from "react-hot-toast";
+import styled from "@emotion/styled";
+import useCreateQuiz from "../hooks/useCreateQuiz";
 
 // import { clearState, loginUser } from '../../redux/authSlice';
 
@@ -19,38 +19,38 @@ export const CreateQuiz = () => {
               <div className="max-w-sm mx-auto">
                 <Formik
                   initialValues={{
-                    title: '',
-                    topic: '',
+                    title: "",
+                    topic: "",
                     time: 30,
                     scoreForCorrectResponse: 2,
                     scoreForIncorrectResponse: 0,
-                    isPrivate: '', // for select
+                    isPrivate: "", // for select
                   }}
                   validationSchema={Yup.object({
-                    title: Yup.string().required('Required'),
-                    topic: Yup.string().required('Required'),
-                    time: Yup.number().required('Required'),
+                    title: Yup.string().required("Required"),
+                    topic: Yup.string().required("Required"),
+                    time: Yup.number().required("Required"),
                     scoreForCorrectResponse: Yup.number()
-                      .max(10, 'Score should be <= 10.')
-                      .min(-10, 'Score should be >= -10'),
+                      .max(10, "Score should be <= 10.")
+                      .min(-10, "Score should be >= -10"),
                     scoreForIncorrectResponse: Yup.number()
-                      .max(10, 'Score should be <= 10.')
-                      .min(-10, 'Score should be >= -10'),
+                      .max(10, "Score should be <= 10.")
+                      .min(-10, "Score should be >= -10"),
                     isPrivate: Yup.string()
                       // specify the set of valid values for job type
                       // @see http://bit.ly/yup-mixed-oneOf
-                      .oneOf(['private', 'public'], 'Invalid Quiz Visibility')
-                      .required('Required'),
+                      .oneOf(["private", "public"], "Invalid Quiz Visibility")
+                      .required("Required"),
                   })}
                   onSubmit={async (values) => {
                     values.time = String(values.time);
 
-                    if (values.isPrivate === 'private') values.isPrivate = true;
+                    if (values.isPrivate === "private") values.isPrivate = true;
                     else values.isPrivate = false;
 
                     try {
                       await createQuiz(values);
-                      toast.success('Successfully created new quiz!');
+                      toast.success("Successfully created new quiz!");
                     } catch (error) {
                       toast.error(error);
                     }
@@ -106,7 +106,7 @@ export const CreateQuiz = () => {
                             className="btn text-white bg-blue-600 hover:bg-blue-700 w-full"
                             disabled={isSubmitting}
                           >
-                            {isSubmitting ? 'Submitting...' : 'Create Quiz'}
+                            {isSubmitting ? "Submitting..." : "Create Quiz"}
                           </button>
                         </div>
                       </div>
@@ -136,7 +136,7 @@ const MyTextInput = ({ label, ...props }) => {
         </label>
         <input
           className={`form-input w-full text-gray-800 outline-none ${
-            meta.touched && meta.error && 'border-2 border-red-600'
+            meta.touched && meta.error && "border-2 border-red-600"
           }`}
           {...field}
           {...props}
@@ -175,7 +175,7 @@ const MySelect = ({ label, ...props }) => {
 
 const StyledErrorMessage = styled.div`
   &:before {
-    content: '❌ ';
+    content: "❌ ";
     font-size: 10px;
   }
 `;

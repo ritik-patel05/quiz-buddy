@@ -1,9 +1,9 @@
-import './App.css';
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { Routes, Route } from 'react-router-dom';
-import axios from 'axios';
-import { logout, getNewAccessToken, clearState } from './redux/authSlice';
+import "./App.css";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { Routes, Route } from "react-router-dom";
+import axios from "axios";
+import { logout, getNewAccessToken, clearState } from "./redux/authSlice";
 import {
   Home,
   Login,
@@ -11,8 +11,8 @@ import {
   Dashboard,
   EditQuiz,
   QuizInfo,
-} from './pages/index';
-import { Header } from './components/index';
+} from "./pages/index";
+import { Header } from "./components/index";
 
 axios.defaults.withCredentials = true;
 
@@ -33,14 +33,14 @@ function App() {
   // This will call logout in all of the tabs.
   useEffect(() => {
     const syncLogout = (event) => {
-      if (event.key === 'logout') {
-        console.log('Logged out from storage :)');
+      if (event.key === "logout") {
+        console.log("Logged out from storage :)");
         dispatch(logout());
       }
     };
 
-    window.addEventListener('storage', syncLogout);
-    return () => window.removeEventListener('storage', syncLogout);
+    window.addEventListener("storage", syncLogout);
+    return () => window.removeEventListener("storage", syncLogout);
   }, [dispatch]);
 
   return (

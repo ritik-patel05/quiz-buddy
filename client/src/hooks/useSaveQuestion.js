@@ -1,17 +1,17 @@
-import { useMutation, useQueryClient } from 'react-query';
-import axios from 'axios';
-import { constants } from '../util/constant';
+import { useMutation, useQueryClient } from "react-query";
+import axios from "axios";
+import { constants } from "../util/constant";
 
 export default function useSaveQuestion() {
   const queryClient = useQueryClient();
-  let questionId = '';
+  let questionId = "";
   return useMutation(
     ({ quesId, values }) => {
       questionId = quesId;
       return axios
         .put(`${constants.backendUrl}/api/question/${questionId}`, values, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('access-token')}`,
+            Authorization: `Bearer ${localStorage.getItem("access-token")}`,
           },
         })
         .then((res) => res.data);
@@ -20,15 +20,15 @@ export default function useSaveQuestion() {
       onMutate: async ({ values: updatedQuestion }) => {
         console.log(updatedQuestion);
         // cancel any outgoing refetches(so they dont overwrite our optimistic update)
-        await queryClient.cancelQueries(['question', questionId]);
+        await queryClient.cancelQueries(["question", questionId]);
 
         const previousQuestion = queryClient.getQueryData([
-          'question',
+          "question",
           questionId,
         ]);
 
         // Optimistically update to new value
-        queryClient.setQueryData(['question', questionId], (old) => ({
+        queryClient.setQueryData(["question", questionId], (old) => ({
           ...old,
           ...updatedQuestion,
         }));
@@ -37,7 +37,7 @@ export default function useSaveQuestion() {
       },
       onError: (err, updatedQuestion, context) => {
         queryClient.setQueryData(
-          ['question', questionId],
+          ["question", questionId],
           context?.previousQuestion ? context?.previousQuestion : {}
         );
         console.log(err);
@@ -45,7 +45,7 @@ export default function useSaveQuestion() {
       },
       // Always refetch after error or success.
       onSettled: () => {
-        queryClient.invalidateQueries(['question', questionId]);
+        queryClient.invalidateQueries(["question", questionId]);
       },
     }
   );

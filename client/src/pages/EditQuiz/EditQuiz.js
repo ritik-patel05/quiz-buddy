@@ -1,22 +1,21 @@
-import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
-import useGetQuizDetails from '../../hooks/useGetQuizDetails';
-import useGetQuestionDetails from '../../hooks/useGetQuestionDetails';
-import { Formik, Form, useField } from 'formik';
-import styled from '@emotion/styled';
-import useSaveQuestion from '../../hooks/useSaveQuestion';
-import useCreateQuestion from '../../hooks/useCreateQuestion';
-import { Header } from '../../components';
-import { useDispatch, useSelector } from 'react-redux';
-import { clearState, getNewAccessToken } from '../../redux/authSlice';
-import { useNavigate } from 'react-router-dom';
-
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
+import useGetQuizDetails from "../../hooks/useGetQuizDetails";
+import useGetQuestionDetails from "../../hooks/useGetQuestionDetails";
+import { Formik, Form, useField } from "formik";
+import styled from "@emotion/styled";
+import useSaveQuestion from "../../hooks/useSaveQuestion";
+import useCreateQuestion from "../../hooks/useCreateQuestion";
+import { Header } from "../../components";
+import { useDispatch, useSelector } from "react-redux";
+import { clearState, getNewAccessToken } from "../../redux/authSlice";
+import { useNavigate } from "react-router-dom";
 
 export const EditQuiz = () => {
   const { quizId } = useParams();
   const { status, data, error } = useGetQuizDetails(quizId);
-  const [activeQuestionId, setActiveQuestionId] = useState('');
+  const [activeQuestionId, setActiveQuestionId] = useState("");
   const {
     status: questionStatus,
     data: questionData,
@@ -24,7 +23,7 @@ export const EditQuiz = () => {
   } = useGetQuestionDetails(activeQuestionId);
   const [options, setOptions] = useState([]);
   const [isAddNewOptionOpen, setIsAddNewOptionOpen] = useState(false);
-  const [addNewOptionText, setAddNewOptionText] = useState('');
+  const [addNewOptionText, setAddNewOptionText] = useState("");
   const { mutateAsync: saveQuestion, status: saveQuestionStatus } =
     useSaveQuestion();
   const [isAddNewQuestionFormOpen, setIsAddNewQuestionFormOpen] =
@@ -40,13 +39,13 @@ export const EditQuiz = () => {
   // check if user is logged in(if the cookie is still not expired.)
   useEffect(() => {
     const handleLogin = async () => {
-      if (localStorage.getItem('access-token') !== null) {
+      if (localStorage.getItem("access-token") !== null) {
         await dispatch(getNewAccessToken());
         if (nameOfLoggedInUser === null) {
-          navigate('/login');
+          navigate("/login");
         }
       } else {
-        navigate('/login');
+        navigate("/login");
       }
     };
 
@@ -57,7 +56,7 @@ export const EditQuiz = () => {
   // As the data loads for quiz details.
   // Update the current active question id to the first.
   useEffect(() => {
-    if (status === 'success') {
+    if (status === "success") {
       if (!activeQuestionId) {
         if (data.quiz.questions.length) {
           setActiveQuestionId(data.quiz.questions[0]);
@@ -68,7 +67,7 @@ export const EditQuiz = () => {
 
   // As the question loads, update the options state.
   useEffect(() => {
-    if (questionStatus === 'success') {
+    if (questionStatus === "success") {
       if (!options.length) {
         setOptions(questionData.question.options);
       }
@@ -93,20 +92,20 @@ export const EditQuiz = () => {
   };
 
   const toggleAddQuestionForm = () => {
-    console.log('add question clicked');
+    console.log("add question clicked");
     setIsAddNewQuestionFormOpen(!isAddNewQuestionFormOpen);
   };
 
   const handleAddOptionSurely = () => {
     if (options.length === 4) {
-      toast.error('Can only add at max 4 options.');
+      toast.error("Can only add at max 4 options.");
       return;
     }
-    console.log('clicked');
+    console.log("clicked");
     options.push(addNewOptionText);
-    setAddNewOptionText('');
+    setAddNewOptionText("");
     setOptions(options);
-    console.log('executed');
+    console.log("executed");
   };
 
   return (
@@ -117,7 +116,7 @@ export const EditQuiz = () => {
           {isAddNewQuestionFormOpen && (
             <Formik
               initialValues={{
-                questionBody: '',
+                questionBody: "",
               }}
               onSubmit={async (values) => {
                 try {
@@ -126,7 +125,7 @@ export const EditQuiz = () => {
                     quId: quizId,
                   };
                   await createQuestion(obj);
-                  toast.success('Saved!');
+                  toast.success("Saved!");
                 } catch (error) {
                   toast.error(error);
                 }
@@ -158,7 +157,7 @@ export const EditQuiz = () => {
           <div className="flex flex-row flex-grow">
             <div className="justify-start flex-grow max-w-xs p-2 border-red-800 border-2 mr-4">
               Questions
-              {status === 'loading' ? (
+              {status === "loading" ? (
                 <div> Loading... </div>
               ) : (
                 <>
@@ -194,7 +193,7 @@ export const EditQuiz = () => {
                 <div> No questions </div>
               ) : (
                 <>
-                  {questionStatus === 'loading' ? (
+                  {questionStatus === "loading" ? (
                     <div>Loading Questions...</div>
                   ) : (
                     <Formik
@@ -202,10 +201,10 @@ export const EditQuiz = () => {
                       initialValues={{
                         questionBody: questionData?.question?.questionBody
                           ? questionData?.question?.questionBody
-                          : '',
+                          : "",
                         correctOption: questionData?.question?.correctOption
                           ? questionData?.question?.correctOption
-                          : '',
+                          : "",
                       }}
                       onSubmit={async (values) => {
                         try {
@@ -214,7 +213,7 @@ export const EditQuiz = () => {
                             quesId: activeQuestionId,
                           };
                           await saveQuestion(obj);
-                          toast.success('Saved!');
+                          toast.success("Saved!");
                         } catch (error) {
                           toast.error(error);
                         }
@@ -284,10 +283,10 @@ export const EditQuiz = () => {
                           <button
                             type="submit"
                             className={`btn-sm text-white bg-blue-600 hover:bg-blue-700 max-w-sm ${
-                              !isAddNewOptionOpen && 'ml-2'
+                              !isAddNewOptionOpen && "ml-2"
                             }`}
                           >
-                            {isSubmitting ? 'Submitting...' : 'Save Question'}
+                            {isSubmitting ? "Submitting..." : "Save Question"}
                           </button>
                         </Form>
                       )}
@@ -318,7 +317,7 @@ const MyTextInput = ({ label, ...props }) => {
         </label>
         <input
           className={`form-input w-full text-gray-800 outline-none ${
-            meta.touched && meta.error && 'border-2 border-red-600'
+            meta.touched && meta.error && "border-2 border-red-600"
           }`}
           {...field}
           {...props}
@@ -357,7 +356,7 @@ const MySelect = ({ label, ...props }) => {
 
 const StyledErrorMessage = styled.div`
   &:before {
-    content: '❌ ';
+    content: "❌ ";
     font-size: 10px;
   }
 `;

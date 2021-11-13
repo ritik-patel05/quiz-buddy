@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../redux/authSlice';
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../redux/authSlice";
 
 // import { setUser, logout } from '../features/user/userSlice';
 
@@ -19,19 +19,19 @@ export const Header = () => {
     const scrollHandler = () => {
       window.pageYOffset > 10 ? setTop(false) : setTop(true);
     };
-    window.addEventListener('scroll', scrollHandler);
-    return () => window.removeEventListener('scroll', scrollHandler);
+    window.addEventListener("scroll", scrollHandler);
+    return () => window.removeEventListener("scroll", scrollHandler);
   }, [top]);
 
   const logoutHandler = (e) => {
     dispatch(logout());
-    navigate('/login');
+    navigate("/login");
   };
 
   return (
     <header
       className={`fixed w-full z-30 md:bg-opacity-90 transition duration-300 ease-in-out ${
-        !top && 'bg-white blur shadow-lg'
+        !top && "bg-white blur shadow-lg"
       }`}
     >
       <div className="max-w-6xl mx-auto px-5 sm:px-6">
@@ -86,7 +86,7 @@ export const Header = () => {
                         />
                       </svg>
                     </Link>
-                  </li>{' '}
+                  </li>{" "}
                 </>
               ) : (
                 <>
@@ -97,7 +97,7 @@ export const Header = () => {
                     >
                       Log Out
                     </button>
-                  </li>{' '}
+                  </li>{" "}
                 </>
               )}
             </ul>
@@ -140,9 +140,9 @@ export const Header = () => {
 
             {/* Mobile Navigation */}
             <nav
-              style={{ maxHeight: '220px' }}
+              style={{ maxHeight: "220px" }}
               className={` ${
-                !menuOpen && 'hidden'
+                !menuOpen && "hidden"
               } z-20 w-full top-full left-0 absolute p-6 h-screen bg-blue-50 overflow-hidden`}
             >
               <ul className="px-5 py-2">

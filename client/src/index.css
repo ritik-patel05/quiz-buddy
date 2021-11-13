@@ -3,104 +3,103 @@
 @tailwind utilities;
 
 @layer utilities {
-	/* Chrome, Safari and Opera */
-	.no-scrollbar::-webkit-scrollbar {
-		display: none;
-	}
+  /* Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 
-	.no-scrollbar {
-		-ms-overflow-style: none;  /* IE and Edge */
-		scrollbar-width: none;  /* Firefox */
-	}
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 }
 
 .blur {
-	backdrop-filter: blur(3px);
-	-webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
 }
 
 .btn,
 .btn-sm {
-	@apply font-medium inline-flex justify-center items-center border border-transparent rounded leading-snug transition duration-150 ease-in-out;
+  @apply font-medium inline-flex justify-center items-center border border-transparent rounded leading-snug transition duration-150 ease-in-out;
 }
 
 .btn {
-	@apply px-8 py-3 shadow-lg;
+  @apply px-8 py-3 shadow-lg;
 }
 
 .btn-sm {
-	@apply px-4 py-2 shadow;
+  @apply px-4 py-2 shadow;
 }
 
 .h1 {
-	@apply text-4xl font-extrabold leading-tight tracking-tighter;
+  @apply text-4xl font-extrabold leading-tight tracking-tighter;
 }
 
 .h2 {
-	@apply text-3xl font-extrabold leading-tight tracking-tighter;
+  @apply text-3xl font-extrabold leading-tight tracking-tighter;
 }
 
 .h3 {
-	@apply text-3xl font-bold leading-tight;
+  @apply text-3xl font-bold leading-tight;
 }
 
 .h4 {
-	@apply text-2xl font-bold leading-snug tracking-tight;
+  @apply text-2xl font-bold leading-snug tracking-tight;
 }
 
 .fixh {
-	height: calc(100vh - 160px);
+  height: calc(100vh - 160px);
 }
 
 .fixh1 {
-	max-height: calc(100% - 64px);
+  max-height: calc(100% - 64px);
 }
 
 .fixw {
-	max-width: calc(100% - 64px);
+  max-width: calc(100% - 64px);
 }
 
 .bullet {
-	@apply h-2 w-2 rounded border-solid border
+  @apply h-2 w-2 rounded border-solid border;
 }
 
 .question-box {
-	@apply flex h-10 w-10 items-center justify-center cursor-pointer rounded-r bg-base-1
+  @apply flex h-10 w-10 items-center justify-center cursor-pointer rounded-r bg-base-1;
 }
 
 .answered {
-	@apply border-none text-green-400 bg-green-50
+  @apply border-none text-green-400 bg-green-50;
 }
 
 .active {
-	@apply border border-solid border-primary
+  @apply border border-solid border-primary;
 }
 
 .unanswered {
-	@apply border border-solid border-divider
+  @apply border border-solid border-divider;
 }
 
 html {
-	scroll-behavior: smooth;
-	word-break: break-word;
-	text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+  word-break: break-word;
+  text-rendering: optimizeLegibility;
 }
 
 body {
-	@apply bg-base-0 h-screen
+  @apply bg-base-0 h-screen;
 }
 
 fieldset {
-	border-bottom: 1px solid #eee;
-	margin-bottom: 21px;
-	padding-bottom: 10.5px;
-	position: relative;
-	padding: 0;
-	margin: 0;
-	border: 0;
-	min-width: 0;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 21px;
+  padding-bottom: 10.5px;
+  position: relative;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  min-width: 0;
 }
-  
 
 :focus,
 button:focus,
@@ -112,5 +111,5 @@ button:focus,
 .form-select:focus,
 .form-checkbox:focus,
 .form-radio:focus {
-	outline: 2px solid rgba(#0070f4, 0.5);
+  outline: 2px solid rgba(#0070f4, 0.5);
 }

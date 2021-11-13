@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
-import Dialog from '@mui/material/Dialog';
+import PropTypes from "prop-types";
+import Dialog from "@mui/material/Dialog";
 
 export const ConfirmationDialog = (props) => {
   const {
@@ -16,13 +16,13 @@ export const ConfirmationDialog = (props) => {
   };
 
   const handleOk = () => {
-    onClose('success');
+    onClose("success");
   };
 
   return (
     <Dialog
       sx={{
-        '& .MuiDialog-paper': { width: '80%', maxHeight: 435 },
+        "& .MuiDialog-paper": { width: "80%", maxHeight: 435 },
       }}
       maxWidth="sm"
       open={open}

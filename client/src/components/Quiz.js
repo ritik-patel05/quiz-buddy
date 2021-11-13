@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import useGetQuestionDetails from '../hooks/useGetQuestionDetails';
-import useGetQuestions from '../hooks/useGetQuestions';
-import { setOption } from '../redux/quizSlice';
-import { Formik, Field, Form } from 'formik';
-import { ConfirmationDialog } from './ConfirmationDialog';
-import axios from 'axios';
-import { constants } from '../util/constant';
-import toast, { Toaster } from 'react-hot-toast';
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import useGetQuestionDetails from "../hooks/useGetQuestionDetails";
+import useGetQuestions from "../hooks/useGetQuestions";
+import { setOption } from "../redux/quizSlice";
+import { Formik, Field, Form } from "formik";
+import { ConfirmationDialog } from "./ConfirmationDialog";
+import axios from "axios";
+import { constants } from "../util/constant";
+import toast, { Toaster } from "react-hot-toast";
 
 export const Quiz = ({
   quizId,
@@ -24,7 +24,7 @@ export const Quiz = ({
     status: allQuestionsStatus,
     error: allQuestionsError,
   } = useGetQuestions(quizId);
-  const [activeQuestionId, setActiveQuestionId] = useState('');
+  const [activeQuestionId, setActiveQuestionId] = useState("");
   const {
     data: questionData,
     status: questionStatus,
@@ -32,7 +32,7 @@ export const Quiz = ({
   } = useGetQuestionDetails(
     allQuestionsData?.questions?.[activeQuestionId]
       ? allQuestionsData?.questions?.[activeQuestionId]
-      : ''
+      : ""
   );
   const [answeredCount, setAnsweredCount] = useState(0);
 
@@ -45,7 +45,7 @@ export const Quiz = ({
   const addLeadingZeros = (value) => {
     value = String(value);
     while (value.length < 2) {
-      value = '0' + value;
+      value = "0" + value;
     }
     return value;
   };
@@ -60,7 +60,7 @@ export const Quiz = ({
       }
 
       let currTime = timeInSeconds;
-      console.log(currTime, 'timeee');
+      console.log(currTime, "timeee");
 
       const timeLeft = {
         hours: 0,
@@ -92,8 +92,8 @@ export const Quiz = ({
   // On first time quiz page load,
   // Load the first question.
   useEffect(() => {
-    if (allQuestionsStatus === 'success') {
-      if (activeQuestionId === '') {
+    if (allQuestionsStatus === "success") {
+      if (activeQuestionId === "") {
         setActiveQuestionId(0);
       }
     }
@@ -102,7 +102,7 @@ export const Quiz = ({
   // When the question loads,
   // Check if it is already answered, then set its Option id
   useEffect(() => {
-    if (questionStatus === 'success') {
+    if (questionStatus === "success") {
     }
   }, [questionStatus]);
 
@@ -121,7 +121,7 @@ export const Quiz = ({
       axios
         .get(`${constants.backendUrl}/api/quiz/${quizId}/end`, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('access-token')}`,
+            Authorization: `Bearer ${localStorage.getItem("access-token")}`,
           },
         })
         .then((res) => {
@@ -137,31 +137,33 @@ export const Quiz = ({
   };
 
   const callSaveQuestionApi = (option) => {
-    const payload = {questionId: activeQuestionId, optionSelected: option};
+    const payload = { questionId: activeQuestionId, optionSelected: option };
     axios
       .post(`${constants.backendUrl}/api/quiz/${quizId}/save`, payload, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('access-token')}`,
+          Authorization: `Bearer ${localStorage.getItem("access-token")}`,
         },
       })
       .then((res) => {
-        console.log(`Success, Question saved: ${activeQuestionId}, with option: ${option}`);
+        console.log(
+          `Success, Question saved: ${activeQuestionId}, with option: ${option}`
+        );
       })
       .catch((err) => {
         console.log(err);
       });
-  }
+  };
 
   console.log(optionsSelected);
 
   return (
     <main className="min-w-6xl max-w-7xl mx-auto grid grid-cols-7030 h-screen bg-base-0">
-      {questionStatus === 'error' && (
+      {questionStatus === "error" && (
         <div>
           Server Error: {allQuestionsError} {questionError}
         </div>
       )}
-      {questionStatus !== 'error' && (
+      {questionStatus !== "error" && (
         <>
           <div>
             {/* Left Side */}
@@ -176,10 +178,10 @@ export const Quiz = ({
                 </div>
                 <div className="flex">
                   <h2 className="text-xl font-semibold">
-                    {addLeadingZeros(timer.hours) + ' :'}&nbsp;
+                    {addLeadingZeros(timer.hours) + " :"}&nbsp;
                   </h2>
                   <h2 className="text-xl font-semibold">
-                    {addLeadingZeros(timer.minutes) + ' : '}&nbsp;
+                    {addLeadingZeros(timer.minutes) + " : "}&nbsp;
                   </h2>
                   <h2 className="text-xl font-semibold">
                     {addLeadingZeros(timer.seconds)}
@@ -188,7 +190,7 @@ export const Quiz = ({
               </div>
 
               {/* Question Body + Options */}
-              {questionStatus === 'success' && (
+              {questionStatus === "success" && (
                 <Formik
                   initialValues={{
                     options: optionsSelected.hasOwnProperty(activeQuestionId)
@@ -203,7 +205,7 @@ export const Quiz = ({
                     // if any option is selected
                     // save the option in global state
                     // and call api to save it.
-                    if (values.options !== '-1') {
+                    if (values.options !== "-1") {
                       dispatch(setOption(payload));
                       callSaveQuestionApi(values.options);
                     }
@@ -225,16 +227,16 @@ export const Quiz = ({
                             e.target.checked
                           ) {
                             e.target.checked = false; // deactivate it
-                            setValues({ options: '-1' }); // set value to null since nothing is selected
+                            setValues({ options: "-1" }); // set value to null since nothing is selected
                           }
                         }}
                       >
                         <div className="mt-12 p-4">
-                          {(questionStatus === 'idle' ||
-                            questionStatus === 'loading') && (
+                          {(questionStatus === "idle" ||
+                            questionStatus === "loading") && (
                             <div> Loading... </div>
                           )}
-                          {questionStatus === 'success' && (
+                          {questionStatus === "success" && (
                             <>
                               <div className="p-6 mb-6 select-none bg-base-1">
                                 <div className="flex flex-col mb-6">
@@ -353,13 +355,13 @@ export const Quiz = ({
                       key={index}
                       onClick={() => handleQuestionChange(index)}
                       className={`question-box ${
-                        index === activeQuestionId && 'active'
+                        index === activeQuestionId && "active"
                       } ${
-                        optionsSelected.hasOwnProperty(index) && 'answered'
+                        optionsSelected.hasOwnProperty(index) && "answered"
                       } ${
                         !optionsSelected.hasOwnProperty(index) &&
                         index !== activeQuestionId &&
-                        'unanswered'
+                        "unanswered"
                       } `}
                     >
                       {index + 1}

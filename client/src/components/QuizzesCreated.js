@@ -1,14 +1,14 @@
-import { DisplayQuiz } from '.';
-import useGetCreatedQuizzes from '../hooks/useGetCreatedQuizzes';
+import { DisplayQuiz } from ".";
+import useGetCreatedQuizzes from "../hooks/useGetCreatedQuizzes";
 
 export const QuizzesCreated = () => {
   const { status, data, error } = useGetCreatedQuizzes();
   return (
     <section>
       <div>
-        {status === 'loading' ? (
+        {status === "loading" ? (
           <span> Loading... </span>
-        ) : status === 'error' ? (
+        ) : status === "error" ? (
           <span> Error: {error.message} </span>
         ) : (
           <>

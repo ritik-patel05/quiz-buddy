@@ -1,13 +1,13 @@
-import { Formik, Form, useField } from 'formik';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
-import * as Yup from 'yup';
-import toast, { Toaster } from 'react-hot-toast';
-import styled from '@emotion/styled';
+import { Formik, Form, useField } from "formik";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import * as Yup from "yup";
+import toast, { Toaster } from "react-hot-toast";
+import styled from "@emotion/styled";
 
-import { clearState, signupUser } from '../../redux/authSlice';
-import { Header } from '../../components';
+import { clearState, signupUser } from "../../redux/authSlice";
+import { Header } from "../../components";
 
 export const Signup = () => {
   const name = useSelector((state) => state.auth.name);
@@ -18,7 +18,7 @@ export const Signup = () => {
   useEffect(() => {
     dispatch(clearState());
     if (name) {
-      navigate('/dashboard');
+      navigate("/dashboard");
     }
     return () => dispatch(clearState()); // clean up function.
   }, [dispatch, name, navigate]);
@@ -40,24 +40,24 @@ export const Signup = () => {
                 <div className="max-w-sm mx-auto">
                   <Formik
                     initialValues={{
-                      name: '',
-                      email: '',
-                      password: '',
+                      name: "",
+                      email: "",
+                      password: "",
                     }}
                     validationSchema={Yup.object({
-                      name: Yup.string().required('Required'),
+                      name: Yup.string().required("Required"),
                       email: Yup.string()
-                        .email('Invalid email address')
-                        .required('Required'),
+                        .email("Invalid email address")
+                        .required("Required"),
                       password: Yup.string()
-                        .min(4, 'Must be 4 characters or more.')
-                        .required('Required'),
+                        .min(4, "Must be 4 characters or more.")
+                        .required("Required"),
                     })}
                     onSubmit={async (values) => {
                       try {
                         const res = await dispatch(signupUser(values)).unwrap();
                         // if signup succeeded.
-                        navigate('/login');
+                        navigate("/login");
                       } catch (err) {
                         // if signup failed.
                         toast.error(err?.message ? err.message : err);
@@ -95,7 +95,7 @@ export const Signup = () => {
                               className="btn text-white bg-blue-600 hover:bg-blue-700 w-full"
                               disabled={isSubmitting}
                             >
-                              {isSubmitting ? 'Submitting...' : 'Sign up'}
+                              {isSubmitting ? "Submitting..." : "Sign up"}
                             </button>
                           </div>
                         </div>
@@ -104,7 +104,7 @@ export const Signup = () => {
                   </Formik>
 
                   <div className="text-gray-600 text-center mt-6">
-                    Already using Quiz-Buddy?{' '}
+                    Already using Quiz-Buddy?{" "}
                     <Link
                       to="/login"
                       className="text-blue-600 hover:underline transition duration-150 ease-in-out"
@@ -136,7 +136,7 @@ const MyTextInput = ({ label, ...props }) => {
         </label>
         <input
           className={`form-input w-full text-gray-800 outline-none ${
-            meta.touched && meta.error && 'border-2 border-red-600'
+            meta.touched && meta.error && "border-2 border-red-600"
           }`}
           {...field}
           {...props}
@@ -153,7 +153,7 @@ const MyTextInput = ({ label, ...props }) => {
 
 const StyledErrorMessage = styled.div`
   &:before {
-    content: '❌ ';
+    content: "❌ ";
     font-size: 10px;
   }
 `;

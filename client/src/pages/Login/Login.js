@@ -1,13 +1,13 @@
-import { Formik, Form, useField } from 'formik';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
-import * as Yup from 'yup';
-import toast, { Toaster } from 'react-hot-toast';
-import styled from '@emotion/styled';
+import { Formik, Form, useField } from "formik";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import * as Yup from "yup";
+import toast, { Toaster } from "react-hot-toast";
+import styled from "@emotion/styled";
 
-import { clearState, loginUser } from '../../redux/authSlice';
-import { Header } from '../../components';
+import { clearState, loginUser } from "../../redux/authSlice";
+import { Header } from "../../components";
 
 export const Login = () => {
   const name = useSelector((state) => state.auth.name);
@@ -18,7 +18,7 @@ export const Login = () => {
   useEffect(() => {
     dispatch(clearState());
     if (name) {
-      navigate('/');
+      navigate("/");
     }
     return () => dispatch(clearState()); // clean up function.
   }, [dispatch, name, navigate]);
@@ -40,22 +40,22 @@ export const Login = () => {
                 <div className="max-w-sm mx-auto">
                   <Formik
                     initialValues={{
-                      email: '',
-                      password: '',
+                      email: "",
+                      password: "",
                     }}
                     validationSchema={Yup.object({
                       email: Yup.string()
-                        .email('Invalid email address')
-                        .required('Required'),
+                        .email("Invalid email address")
+                        .required("Required"),
                       password: Yup.string()
-                        .min(4, 'Must be 4 characters or more.')
-                        .required('Required'),
+                        .min(4, "Must be 4 characters or more.")
+                        .required("Required"),
                     })}
                     onSubmit={async (values) => {
                       try {
                         const res = await dispatch(loginUser(values)).unwrap();
                         // if signup succeeded.
-                        navigate('/dashboard');
+                        navigate("/dashboard");
                       } catch (err) {
                         // if signup failed.
                         toast.error(err?.message ? err.message : err);
@@ -86,7 +86,7 @@ export const Login = () => {
                               className="btn text-white bg-blue-600 hover:bg-blue-700 w-full"
                               disabled={isSubmitting}
                             >
-                              {isSubmitting ? 'Submitting...' : 'Sign in'}
+                              {isSubmitting ? "Submitting..." : "Sign in"}
                             </button>
                           </div>
                         </div>
@@ -95,7 +95,7 @@ export const Login = () => {
                   </Formik>
 
                   <div className="text-gray-600 text-center mt-6">
-                    Don't You have an account?{' '}
+                    Don't You have an account?{" "}
                     <Link
                       to="/signup"
                       className="text-blue-600 hover:underline transition duration-150 ease-in-out"
@@ -127,7 +127,7 @@ const MyTextInput = ({ label, ...props }) => {
         </label>
         <input
           className={`form-input w-full text-gray-800 outline-none ${
-            meta.touched && meta.error && 'border-2 border-red-600'
+            meta.touched && meta.error && "border-2 border-red-600"
           }`}
           {...field}
           {...props}
@@ -144,7 +144,7 @@ const MyTextInput = ({ label, ...props }) => {
 
 const StyledErrorMessage = styled.div`
   &:before {
-    content: '❌ ';
+    content: "❌ ";
     font-size: 10px;
   }
 `;

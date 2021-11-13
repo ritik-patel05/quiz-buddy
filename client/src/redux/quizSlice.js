@@ -1,7 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 export const quizOptionsSlice = createSlice({
-  name: 'quiz',
+  name: "quiz",
   initialState: {
     response: {},
   },
@@ -14,7 +14,7 @@ export const quizOptionsSlice = createSlice({
       const { questionId, option } = action.payload;
       console.log("in setOption reducer", action.payload);
       state.response[questionId] = option;
-    }
+    },
   },
 });
 

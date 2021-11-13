@@ -1,16 +1,22 @@
-import { useEffect } from 'react';
-import { Box, Tab } from '@mui/material';
-import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useEffect } from "react";
+import { Box, Tab } from "@mui/material";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import {
   getNewAccessToken,
   loginUser,
   clearState,
-} from '../../redux/authSlice';
-import { QuizzesCreated, CreateQuiz, Header, QuizzesGiven, GiveQuizzes } from '../../components';
+} from "../../redux/authSlice";
+import {
+  QuizzesCreated,
+  CreateQuiz,
+  Header,
+  QuizzesGiven,
+  GiveQuizzes,
+} from "../../components";
 
 export const Dashboard = () => {
   const dispatch = useDispatch();
@@ -22,13 +28,13 @@ export const Dashboard = () => {
   // check if user is logged in(if the cookie is still not expired.)
   useEffect(() => {
     const handleLogin = async () => {
-      if (localStorage.getItem('access-token') !== null) {
+      if (localStorage.getItem("access-token") !== null) {
         await dispatch(getNewAccessToken());
         if (nameOfLoggedInUser === null) {
-          navigate('/login');
+          navigate("/login");
         }
       } else {
-        navigate('/login');
+        navigate("/login");
       }
     };
 
@@ -36,7 +42,7 @@ export const Dashboard = () => {
     dispatch(clearState());
   }, [dispatch, nameOfLoggedInUser, navigate]);
 
-  const [value, setValue] = useState('1');
+  const [value, setValue] = useState("1");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -44,18 +50,24 @@ export const Dashboard = () => {
 
   const callNavigateParent = (url) => {
     navigate(url);
-  }
+  };
 
   return (
     <>
       <Header />
       <Box
         className="pt-20 max-w-6xl mx-auto px-5 sm:px-6"
-        sx={{ width: '100%', typography: 'body1' }}
+        sx={{ width: "100%", typography: "body1" }}
       >
         <TabContext value={value}>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <TabList onChange={handleChange} aria-label="lab API tabs example" variant="scrollable" scrollButtons allowScrollButtonsMobile>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <TabList
+              onChange={handleChange}
+              aria-label="lab API tabs example"
+              variant="scrollable"
+              scrollButtons
+              allowScrollButtonsMobile
+            >
               <Tab label="Give Quiz" value="1" />
               <Tab label="My Quizzes" value="2" />
               <Tab label="Quizzes Given" value="3" />
