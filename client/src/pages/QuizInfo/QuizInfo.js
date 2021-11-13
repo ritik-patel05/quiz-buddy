@@ -47,7 +47,7 @@ export const QuizInfo = () => {
         .get(
           `${
             process.env.NODE_ENV === "production"
-              ? `/api/quiz/${quizId}/start}`
+              ? `/api/quiz/${quizId}/start`
               : `${constants.backendUrl}/api/quiz/${quizId}/start`
           }`,
           {
