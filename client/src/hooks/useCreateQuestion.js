@@ -12,7 +12,7 @@ export default function useCreateQuestion() {
         .post(
           `${
             process.env.NODE_ENV === "production"
-              ? `api/question/${quizId}/create`
+              ? `/api/question/${quizId}/create`
               : `${constants.backendUrl}/api/question/${quizId}/create`
           }`,
           values,

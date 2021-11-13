@@ -8,7 +8,7 @@ export default function useGetGivenQuizzes() {
       .get(
         `${
           process.env.NODE_ENV === "production"
-            ? "api/quiz/given-quizzes"
+            ? "/api/quiz/given-quizzes"
             : `${constants.backendUrl}/api/quiz/given-quizzes`
         }`,
         {

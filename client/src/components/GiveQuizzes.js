@@ -30,7 +30,7 @@ export const GiveQuizzes = ({ callNavigateParent }) => {
                 .get(
                   `${
                     process.env.NODE_ENV === "production"
-                      ? `api/quiz/private-quiz/${quizCode}`
+                      ? `/api/quiz/private-quiz/${quizCode}`
                       : `${constants.backendUrl}/api/quiz/private-quiz/${quizCode}`
                   }`,
                   {

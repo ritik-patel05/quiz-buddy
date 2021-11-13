@@ -8,7 +8,7 @@ export default function useGetPublicQuizzes() {
       .get(
         `${
           process.env.NODE_ENV === "production"
-            ? "api/quiz/public-quizzes"
+            ? "/api/quiz/public-quizzes"
             : `${constants.backendUrl}/api/quiz/public-quizzes`
         }`,
         {

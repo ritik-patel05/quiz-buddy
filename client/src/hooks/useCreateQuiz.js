@@ -11,7 +11,7 @@ export default function useCreateQuiz() {
         .post(
           `${
             process.env.NODE_ENV === "production"
-              ? "api/quiz/create"
+              ? "/api/quiz/create"
               : `${constants.backendUrl}/api/quiz/create`
           }`,
           values,

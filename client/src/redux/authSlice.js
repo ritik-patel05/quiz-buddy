@@ -6,16 +6,10 @@ export const loginUser = createAsyncThunk(
   "users/loginUser",
   async ({ email, password }, thunkAPI) => {
     try {
-      console.log(
-        "here path in auth slice,",
-        `${constants.backendUrl}/api/auth/login`,
-        process.env.REACT_APP_API_URL,
-        process.env.NODE_ENV
-      );
       const response = await axios.post(
         `${
           process.env.NODE_ENV === "production"
-            ? "api/auth/login"
+            ? "/api/auth/login"
             : `${constants.backendUrl}/api/auth/login`
         }`,
         {
@@ -49,7 +43,7 @@ export const signupUser = createAsyncThunk(
       const response = await axios.post(
         `${
           process.env.NODE_ENV === "production"
-            ? "api/auth/signup"
+            ? "/api/auth/signup"
             : `${constants.backendUrl}/api/auth/signup`
         }`,
         {
@@ -80,7 +74,7 @@ export const getNewAccessToken = createAsyncThunk(
       const response = await axios.get(
         `${
           process.env.NODE_ENV === "production"
-            ? "api/auth/refresh_token"
+            ? "/api/auth/refresh_token"
             : `${constants.backendUrl}/api/auth/refresh_token`
         }`
       );

@@ -12,7 +12,7 @@ export default function useSaveQuestion() {
         .put(
           `${
             process.env.NODE_ENV === "production"
-              ? `api/question/${questionId}`
+              ? `/api/question/${questionId}`
               : `${constants.backendUrl}/api/question/${questionId}`
           }`,
           values,

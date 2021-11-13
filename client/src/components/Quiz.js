@@ -122,7 +122,7 @@ export const Quiz = ({
         .get(
           `${
             process.env.NODE_ENV === "production"
-              ? `api/quiz/${quizId}/end`
+              ? `/api/quiz/${quizId}/end`
               : `${constants.backendUrl}/api/quiz/${quizId}/end`
           }`,
           {
@@ -149,7 +149,7 @@ export const Quiz = ({
       .post(
         `${
           process.env.NODE_ENV === "production"
-            ? `api/quiz/${quizId}/save`
+            ? `/api/quiz/${quizId}/save`
             : `${constants.backendUrl}/api/quiz/${quizId}/save`
         }`,
         payload,
