@@ -28,7 +28,11 @@ export const GiveQuizzes = ({ callNavigateParent }) => {
             onSubmit={async ({ quizCode }) => {
               axios
                 .get(
-                  `${constants.backendUrl}/api/quiz/private-quiz/${quizCode}`,
+                  `${
+                    process.env.NODE_ENV === "production"
+                      ? `api/quiz/private-quiz/${quizCode}`
+                      : `${constants.backendUrl}/api/quiz/private-quiz/${quizCode}`
+                  }`,
                   {
                     headers: {
                       Authorization: `Bearer ${localStorage.getItem(

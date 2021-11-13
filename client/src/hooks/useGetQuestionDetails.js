@@ -5,11 +5,18 @@ import { constants } from "../util/constant";
 export const fetchQuestion = ({ queryKey }) => {
   console.log(queryKey, "here");
   return axios
-    .get(`${constants.backendUrl}/api/question/${queryKey[1]}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("access-token")}`,
-      },
-    })
+    .get(
+      `${
+        process.env.NODE_ENV === "production"
+          ? `api/question/${queryKey[1]}`
+          : `${constants.backendUrl}/api/question/${queryKey[1]}`
+      }`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access-token")}`,
+        },
+      }
+    )
     .then((res) => res.data);
 };
 

@@ -119,11 +119,18 @@ export const Quiz = ({
 
     if (message === "success") {
       axios
-        .get(`${constants.backendUrl}/api/quiz/${quizId}/end`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access-token")}`,
-          },
-        })
+        .get(
+          `${
+            process.env.NODE_ENV === "production"
+              ? `api/quiz/${quizId}/end`
+              : `${constants.backendUrl}/api/quiz/${quizId}/end`
+          }`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access-token")}`,
+            },
+          }
+        )
         .then((res) => {
           console.log("Success, Quiz ended");
           // Trigger parent state update to close the quiz.
@@ -139,11 +146,19 @@ export const Quiz = ({
   const callSaveQuestionApi = (option) => {
     const payload = { questionId: activeQuestionId, optionSelected: option };
     axios
-      .post(`${constants.backendUrl}/api/quiz/${quizId}/save`, payload, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access-token")}`,
-        },
-      })
+      .post(
+        `${
+          process.env.NODE_ENV === "production"
+            ? `api/quiz/${quizId}/save`
+            : `${constants.backendUrl}/api/quiz/${quizId}/save`
+        }`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access-token")}`,
+          },
+        }
+      )
       .then((res) => {
         console.log(
           `Success, Question saved: ${activeQuestionId}, with option: ${option}`

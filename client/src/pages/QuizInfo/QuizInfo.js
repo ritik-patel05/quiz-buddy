@@ -44,11 +44,18 @@ export const QuizInfo = () => {
   const startQuizHandler = () => {
     const callStartQuizApi = () => {
       axios
-        .get(`${constants.backendUrl}/api/quiz/${quizId}/start`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access-token")}`,
-          },
-        })
+        .get(
+          `${
+            process.env.NODE_ENV === "production"
+              ? `api/quiz/${quizId}/start}`
+              : `${constants.backendUrl}/api/quiz/${quizId}/start`
+          }`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access-token")}`,
+            },
+          }
+        )
         .then((res) => {
           console.log(res.data);
           // Reset options of quiz

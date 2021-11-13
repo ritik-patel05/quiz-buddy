@@ -8,11 +8,19 @@ export default function useCreateQuiz() {
   return useMutation(
     (values) =>
       axios
-        .post(`${constants.backendUrl}/api/quiz/create`, values, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access-token")}`,
-          },
-        })
+        .post(
+          `${
+            process.env.NODE_ENV === "production"
+              ? "api/quiz/create"
+              : `${constants.backendUrl}/api/quiz/create`
+          }`,
+          values,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access-token")}`,
+            },
+          }
+        )
         .then((res) => res.data),
     {
       onMutate: async (newQuiz) => {

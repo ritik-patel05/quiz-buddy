@@ -9,11 +9,19 @@ export default function useSaveQuestion() {
     ({ quesId, values }) => {
       questionId = quesId;
       return axios
-        .put(`${constants.backendUrl}/api/question/${questionId}`, values, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access-token")}`,
-          },
-        })
+        .put(
+          `${
+            process.env.NODE_ENV === "production"
+              ? `api/question/${questionId}`
+              : `${constants.backendUrl}/api/question/${questionId}`
+          }`,
+          values,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access-token")}`,
+            },
+          }
+        )
         .then((res) => res.data);
     },
     {

@@ -9,11 +9,19 @@ export default function useCreateQuestion() {
     ({ quId, values }) => {
       quizId = quId;
       return axios
-        .post(`${constants.backendUrl}/api/question/${quizId}/create`, values, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access-token")}`,
-          },
-        })
+        .post(
+          `${
+            process.env.NODE_ENV === "production"
+              ? `api/question/${quizId}/create`
+              : `${constants.backendUrl}/api/question/${quizId}/create`
+          }`,
+          values,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access-token")}`,
+            },
+          }
+        )
         .then((res) => res.data);
     },
     {
