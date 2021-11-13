@@ -1,3 +1,3 @@
 export const constants = {
-  backendUrl: "http://localhost:8800",
+  backendUrl: process.env.REACT_APP_API_URL,
 };
