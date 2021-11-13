@@ -8,8 +8,8 @@ export const fetchQuestions = ({ queryKey }) => {
     .get(
       `${
         process.env.NODE_ENV === "production"
-          ? `/api/question/${queryKey[1]}/questions`
-          : `${constants.backendUrl}/api/question/${queryKey[1]}/questions`
+          ? `/api/quiz/${queryKey[1]}/questions`
+          : `${constants.backendUrl}/api/quiz/${queryKey[1]}/questions`
       }`,
       {
         headers: {
