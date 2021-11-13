@@ -6,7 +6,7 @@ export const loginUser = createAsyncThunk(
   "users/loginUser",
   async ({ email, password }, thunkAPI) => {
     try {
-      console.log("here path in auth slice," `${constants.backendUrl}/api/auth/login`);
+      console.log("here path in auth slice,", `${constants.backendUrl}/api/auth/login`);
       const response = await axios.post(
         `${constants.backendUrl}/api/auth/login`,
         {
